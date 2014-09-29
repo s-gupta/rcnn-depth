@@ -7,7 +7,7 @@ function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD,
   sc = [2 1 0.5];
   [E, Es, O] = detectEdge(I, D, [], C, model, sc, [], []);
   [ucm2 ucms] = contours_to_ucm(I, sc, Es, O);
-  save(out_file, 'E', 'Es', 'O', 'ucm2', 'ucms');
+  if(~isempty(out_file)), save(out_file, 'E', 'Es', 'O', 'ucm2', 'ucms'); end
 
   %% Compute the regions
   params = nyud_params('root_cache_dir', p.cache_dir, 'feature_id', 'depth', 'depth_features', true, 'camera_matrix', C);  
@@ -16,7 +16,7 @@ function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD,
    
   mcg_cache_obj = cache_mcg_features(params, {ucm2, ucms(:,:,1), ucms(:,:,2), ucms(:,:,3)}, [], []);
   candidates = compute_mcg_cands(params, rf, n_cands, mcg_cache_obj, D, RD);
-  save(out_file, '-append', 'candidates');
+  if(~isempty(out_file)), save(out_file, '-append', 'candidates'); end
 
 
   % Display the superpixels and the regions
@@ -56,7 +56,7 @@ function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD,
   feat = rcnn_scale_features(feat, rcnn_model.training_opts.feat_norm_mean);
   detection_scores_no_nms = bsxfun(@plus, feat*rcnn_model.detectors.W, rcnn_model.detectors.B);
   cls = rcnn_model.classes;
-  save(out_file, '-append', 'detection_scores_no_nms', 'cls');
+  if(~isempty(out_file)), save(out_file, '-append', 'detection_scores_no_nms', 'cls'); end
   
   detection_scores_no_nms = detection_scores_no_nms(1:200, :);
   boxes = boxes(1:200,:);
