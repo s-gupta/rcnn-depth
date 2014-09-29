@@ -17,7 +17,7 @@ If you find this code useful in your research, please consider citing:
     }
 
 #### License ####
-RGBD Utils are released under the Simplified BSD License (refer to the LICENSE file for details).
+This code (RCNN-Depth) is released under the Simplified BSD License (refer to the LICENSE file for details). License files for individual packages are included within individual folders.
 
 #### Installation Instructions ####
 0. Create directory, checkout eccv14-code, utils, rgbdutils, nyu-hooks
