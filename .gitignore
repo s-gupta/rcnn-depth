@@ -1,0 +1,9 @@
+._.DS_Store
+.DS_Store
+*.mexa64
+rgbdutils/*
+utils/*
+nyu-hooks/*
+caffe/*
+caffe-data/*
+.git-*
