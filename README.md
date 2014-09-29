@@ -63,7 +63,7 @@
   ```
 
 ### Inference ###
-#### Edges, UCMs, Region Proposals and Detection on a new image ####
+#### Contour Detection, UCMs, Region Proposals and Detection on a new image ####
   ```matlab
   %%
   demo();
@@ -73,15 +73,14 @@
     run_all(color_image, depth_image, rawdepth_image, camera_matrix, []);
   ```
   
-### Training ###  
-#### Edges ####
+### Training ###
+#### Contour Detection ####
 0. Run the following in MATLAB
 
   ```matlab
   jobName = 'compute_edge_cues'; script_edges;
   jobName = 'train_edge_model'; script_edges;
   jobName = 'test_edge_model'; script_edges;
-  
   ```
 
 #### UCMs and Region Proposals ####
