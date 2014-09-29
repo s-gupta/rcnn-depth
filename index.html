@@ -29,36 +29,168 @@
       </header>
       <section>
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="learning-rich-features-from-rgb-d-images-for-object-detection-and-segmentation-pdf" class="anchor" href="#learning-rich-features-from-rgb-d-images-for-object-detection-and-segmentation-pdf"><span class="octicon octicon-link"></span></a>Learning Rich Features from RGB-D Images for Object Detection and Segmentation (<a href="http://www.cs.berkeley.edu/%7Esgupta/pdf/rcnn-depth.pdf">pdf</a>)</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><em>Saurabh Gupta, Ross Girshick, Pablo Arbeláez and Jitendra Malik</em></p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>Presented at European Conference on Computer Vision (ECCV), 2014 </p>
+
+<p>In this paper we study the problem of object detection for RGB-D images using semantically rich image and depth features. We pro- pose a new geocentric embedding for depth images that encodes height above ground and angle with gravity for each pixel in addition to the hor- izontal disparity. We demonstrate that this geocentric embedding works better than using raw depth images for learning feature representations with convolutional neural networks. Our final object detection system achieves an average precision of 37.3%, which is a 56% relative improve- ment over existing methods. We then focus on the task of instance seg- mentation where we label pixels belonging to object instances found by our detector. For this task, we propose a decision forest approach that classifies pixels in the detection window as foreground or background using a family of unary and binary tests that query shape and geocentric pose features. Finally, we use the output from our object detectors in an existing superpixel classification framework for semantic scene segmentation and achieve a 24% relative improvement over current state-of-the-art for the object categories that we study. We believe advances such as those represented in this paper will facilitate the use of perception in fields like robotics.</p>
+
+<h4>
+<a name="citing" class="anchor" href="#citing"><span class="octicon octicon-link"></span></a>Citing</h4>
+
+<p>If you find this code useful in your research, please consider citing:</p>
+
+<pre><code>@incollection{guptaECCV14,
+  author = {Saurabh Gupta and Ross Girshick and Pablo Arbelaez and Jitendra Malik},
+  title = {Learning Rich Features from {RGB-D} Images for Object Detection and Segmentation},
+  booktitle = ECCV,
+  year = {2014},
+}
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h4>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h4>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<p>This code (RCNN-Depth) is released under the Simplified BSD License (refer to the LICENSE file for details). License files for individual packages are included within individual folders.</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h4>
+<a name="installation-instructions" class="anchor" href="#installation-instructions"><span class="octicon octicon-link"></span></a>Installation Instructions</h4>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<ol>
+<li>
+<p>Create directory, checkout eccv14-code, utils, rgbdutils, nyu-hooks</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<pre lang="shell"><code>mkdir rcnn-depth &amp;&amp; cd rcnn-depth
+git clone git@github.com:s-gupta/rcnn-depth.git eccv14-code
+git clone git@github.com:s-gupta/rgbdutils.git eccv14-code/rgbdutils
+git clone git@github.com:s-gupta/utils.git eccv14-code/utils
+git clone git@github.com:s-gupta/nyu-hooks.git eccv14-code/nyu-hooks
+</code></pre>
+</li>
+<li>
+<p>Checkout caffe-code </p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<pre lang="shell"><code>git clone https://github.com/BVLC/caffe.git eccv14-code/caffe
+cd eccv14-code/caffe
+git checkout e5cc609138a0bc4ce5177a67cf84952756d11b38
+cd ../../
+</code></pre>
+</li>
+<li>
+<p>Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks), and external model data (Caffe trained Imagenet model, structured forests BSDS model).</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<pre lang="shell"><code>wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-data.tgz
+tar -xf eccv14-data.tgz
+wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-external-data.tgz
+tar -xf eccv14-external-data.tgz
+</code></pre>
+</li>
+<li>
+<p>Get precomputed models.</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<pre><code>wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-models.tgz
+tar -xf eccv14-models.tgz 
+cd ..
+</code></pre>
+</li>
+</ol><h4>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h4>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ol>
+<li>
+<p>Build caffe (Adjust paths for CUDA / MATLAB in Makefile.config.example and copy to Makefile.config)</p>
+
+<pre lang="shell"><code>cd eccv14-code/caffe
+make -j 16
+make -j 16 matcaffe
+cd ../..
+</code></pre>
+</li>
+<li>
+<p>Build imagestack (Adjust paths in eccv14-code/rgbdutils/imagestack/Makefile).</p>
+
+<pre lang="shell"><code>cd eccv14-code/rgbdutils/imagestack/
+make all -j 16
+cd ../../../
+</code></pre>
+</li>
+<li>
+<p>Build toolboxes, MCG, RCNN. Start MATLAB in the folder eccv14-code</p>
+
+<div class="highlight highlight-matlab"><pre><span class="n">mcg_build</span><span class="p">();</span>
+<span class="n">rcnn_build</span><span class="p">();</span>
+<span class="n">toolboxCompile</span><span class="p">();</span>
+<span class="n">structured_edges_build</span><span class="p">();</span>
+</pre></div>
+</li>
+</ol><h4>
+<a name="inference" class="anchor" href="#inference"><span class="octicon octicon-link"></span></a>Inference</h4>
+
+<h5>
+<a name="contour-detection-ucms-region-proposals-and-detection-on-a-new-image" class="anchor" href="#contour-detection-ucms-region-proposals-and-detection-on-a-new-image"><span class="octicon octicon-link"></span></a>Contour Detection, UCMs, Region Proposals and Detection on a new image</h5>
+
+<div class="highlight highlight-matlab"><pre>  <span class="c">%% Should produce results on the image in demo-data </span>
+  <span class="n">demo</span><span class="p">();</span>
+
+  <span class="c">%% See run_all.m, demo.m to figure out what units / data type</span>
+  <span class="c">% each image is in.</span>
+  <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">ucm2</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">detection_scores_no_nms</span><span class="p">,</span> <span class="n">cls</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">run_all</span><span class="p">(</span><span class="n">color_image</span><span class="p">,</span> <span class="n">depth_image</span><span class="p">,</span> <span class="n">rawdepth_image</span><span class="p">,</span> <span class="n">camera_matrix</span><span class="p">,</span> <span class="p">[]);</span>
+</pre></div>
+
+<h4>
+<a name="training" class="anchor" href="#training"><span class="octicon octicon-link"></span></a>Training</h4>
+
+<h5>
+<a name="contour-detection" class="anchor" href="#contour-detection"><span class="octicon octicon-link"></span></a>Contour Detection</h5>
+
+<ol>
+<li>
+<p>Run the following in MATLAB</p>
+
+<div class="highlight highlight-matlab"><pre><span class="n">jobName</span> <span class="p">=</span> <span class="s">'compute_edge_cues'</span><span class="p">;</span> <span class="n">script_edges</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'train_edge_model'</span><span class="p">;</span> <span class="n">script_edges</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'test_edge_model'</span><span class="p">;</span> <span class="n">script_edges</span><span class="p">;</span>
+</pre></div>
+</li>
+</ol><h5>
+<a name="ucms-and-region-proposals" class="anchor" href="#ucms-and-region-proposals"><span class="octicon octicon-link"></span></a>UCMs and Region Proposals</h5>
+
+<ol>
+<li>
+<p>Run the following in MATLAB</p>
+
+<div class="highlight highlight-matlab"><pre><span class="n">jobName</span> <span class="p">=</span> <span class="s">'edges_to_ucms'</span><span class="p">;</span> <span class="n">script_regions</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'benchmark_multi_ucm'</span><span class="p">;</span> <span class="n">script_regions</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'pareto'</span><span class="p">;</span> <span class="n">script_regions</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'cache-mcg'</span><span class="p">;</span> <span class="n">script_regions</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'rank_training'</span><span class="p">;</span> <span class="n">script_regions</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'region-detect'</span><span class="p">;</span> <span class="n">script_regions</span><span class="p">;</span>
+</pre></div>
+</li>
+</ol><h5>
+<a name="object-detectors-finetuning-training" class="anchor" href="#object-detectors-finetuning-training"><span class="octicon octicon-link"></span></a>Object detectors: finetuning, training</h5>
+
+<ol>
+<li>
+<p>Run the following in MATLAB. At the end of this, you will get 2 finetuning commands that you need to use with caffe for finetuning.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="n">jobName</span> <span class="p">=</span> <span class="s">'save_color'</span><span class="p">;</span> <span class="n">script_detection</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'save_hha'</span><span class="p">;</span> <span class="n">script_detection</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'write_window_file'</span><span class="p">;</span> <span class="n">script_detection</span><span class="p">;</span>
+</pre></div>
+</li>
+<li>
+<p>Use the finetuning commands that print out to finetune the CNN. Use the following to extract features and train the RCNN model.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="n">jobName</span> <span class="p">=</span> <span class="s">'hha_cache_features'</span><span class="p">;</span> <span class="n">script_detection</span><span class="p">;</span>
+<span class="n">jobName</span> <span class="p">=</span> <span class="s">'color_cache_features'</span><span class="p">;</span> <span class="n">script_detection</span><span class="p">;</span>
+<span class="n">res</span> <span class="p">=</span> <span class="n">rcnn_all</span><span class="p">(</span><span class="s">'task-guptaetal'</span><span class="p">,</span> <span class="s">'train'</span><span class="p">,</span> <span class="s">'val'</span><span class="p">);</span>
+</pre></div>
+</li>
+</ol>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/s-gupta">s-gupta</a></p>
