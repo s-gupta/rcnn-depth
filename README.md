@@ -51,7 +51,6 @@ RGBD Utils are released under the Simplified BSD License (refer to the LICENSE f
 0. Get precomputed models.
  
   ```
-  cd eccv14-code
   wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-models.tgz
   tar -xf eccv14-models.tgz 
   cd ..

@@ -58,8 +58,6 @@ function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD,
   cls = rcnn_model.classes;
   if(~isempty(out_file)), save(out_file, '-append', 'detection_scores_no_nms', 'cls'); end
   
-  detection_scores_no_nms = detection_scores_no_nms(1:200, :);
-  boxes = boxes(1:200,:);
   % Visualize some detections
   cls_id = [2 5 16 17];
   cols = lines(length(cls_id));
@@ -71,13 +69,12 @@ function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD,
     keep(rcnn_nms(bbox, 0.3)) = 1;
     thresh = dt.thresh(find(dt.prec > 0.8, 1, 'last'));
     ind = bbox(:,5) > thresh;
-    keep = find(keep & ind)
+    keep = find(keep & ind);
     bbox = bbox(keep,:);
     if(size(bbox,1) > 0)
       Idet = draw_rect_vec(Idet, bbox(:,1:4)', im2uint8(cols(i,:)), 2);
     end
   end
-  keyboard;
   figure(1); subplot(2,3,4); imagesc(Idet); axis image; title(['detections - ', sprintf('%s, ', cls{cls_id})]);
   figure(1); subplot(2,3,5); plot([1:length(cls_id)], 1); legend(cls(cls_id)); axis image;
   
