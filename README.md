@@ -130,7 +130,7 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
   ```matlab
   jobName = 'hha_cache_features'; script_detection;
   jobName = 'color_cache_features'; script_detection;
-  res = rcnn_all('task-guptaetal', 'train', 'val');
+  res = rcnn_all('task-guptaetal', 'rgb_hha', 'trainval', 'test');
   ```
   
 #### Notes ####
