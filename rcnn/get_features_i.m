@@ -1,5 +1,8 @@
 function d = get_features_i(imdb, image_ids_i, opts, onlyGt)
-  
+% function d = get_features_i(imdb, image_ids_i, opts, onlyGt)
+
+% AUTORIGHTS
+
   d = load(fullfile(opts.featDir, imdb.image_ids{image_ids_i}));
 
   % % Inject code to sample features from the classes is class_id is not empty

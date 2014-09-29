@@ -5,6 +5,8 @@ function fAll = depthFeatures(sp, sp2reg, z, missingMask, C),
 %   missingMask boolean variable of whats missing
 %   C is the camera matrix
 
+% AUTORIGHTS
+
   del = 15;
   % z is the depth image as read in ren format, compute the things from it
   % tt = tic();

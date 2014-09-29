@@ -1,6 +1,8 @@
 function HHH = saveDisparity(imName, C, outDir, D, RD)
 % function HHH = saveDisparity(imName, C, outDir, D, RD)
 
+% AUTORIGHTS
+
   if(isempty(D)), D = getImage(imName, 'depth'); end
   if(isempty(RD)), RD = getImage(imName, 'rawdepth'); end
   

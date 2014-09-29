@@ -5,6 +5,8 @@ function [ng1, ng2, dg, sng1, sng2, sdg] = computeDepthCues(z, C, s, depthParam)
 %   s is the scaling of the image
 % 	depthParam = struct('qzc', 2.9e-5, 'sigmaSpace', 1.40*[1 2 3 4], 'rr', 5*[1 2 3 4], 'sigmaDisparity', [3 3 3 3], 'nori', 8, 'savgolFactor', 1.2);
 
+% AUTORIGHTS
+
   % Fill holes if needed
   zf = fillHoles(z, 'bwdist');
 

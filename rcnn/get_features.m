@@ -2,6 +2,8 @@ function dOut = get_features(imdb, image_ids_i, opts, onlyGt)
 % function get_features(imName, opts)
 % Various types of features, as encoded by opts
 
+% AUTORIGHTS
+
   for i = 1:length(opts),
     d{i} = get_features_i(imdb, image_ids_i, opts(i), onlyGt);
     % if(isfield(opts(i).param, 'wt'))

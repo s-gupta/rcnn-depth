@@ -1,4 +1,8 @@
 function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD, C, out_file)
+% function [E, ucm2, candidates, detection_scores_no_nms, cls] = run_all(I, D, RD, C, out_file)
+
+% AUTORIGHTS
+
   %% Compute the UCMs
   p = get_paths();
   edge_model_file = fullfile_ext(p.contours_model_dir, 'forest', 'modelNyuRgbd-3', 'mat');

@@ -1,4 +1,8 @@
 function cues = getAllCues(Iin, Din, C, colorModel, vars, cacheFile)
+% function cues = getAllCues(Iin, Din, C, colorModel, vars, cacheFile)
+
+% AUTORIGHTS
+
   cache = ~isempty(cacheFile);
   try
     assert(cache);

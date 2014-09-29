@@ -4,7 +4,9 @@ function [y1 y2 y3 angl1 angl2] = yCues(D, C, s)
 %   The camera matrix from somewhere
 %   C = getCameraParam('color', 'nyu2');
 %   C = fixCamera(C);
-  
+
+% AUTORIGHTS
+
   % Compute the normals, wrapperComputeNormals expects input in m
   [N, b, pc] = wrapperComputeNormals(double(D)./100, false(size(D)), 3, s, C); 
 

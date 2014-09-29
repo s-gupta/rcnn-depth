@@ -1,5 +1,8 @@
 function make_protofiles(protodir, file_name, args), 
 % function make_protofiles(protodir, file_name, args) 
+
+% AUTORIGHTS
+
   in_dir = 'nyud2_finetuning';
   for i = 1:length(file_name),
     copyfile(fullfile(in_dir, file_name{i}), fullfile(protodir, file_name{i}));

@@ -1,4 +1,8 @@
 function p = get_paths(runname)
+% function p = get_paths(runname)
+
+% AUTORIGHTS
+
   if ~exist('runname', 'var')
     global RUNNAME
     if isempty(RUNNAME), runname = 'release'
