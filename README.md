@@ -1,3 +1,24 @@
+###Learning Rich Features from RGB-D Images for Object Detection and Segmentation###
+*Saurabh Gupta, Ross Girshick, Pablo Arbeláez and Jitendra Malik*
+
+Presented at European Conference on Computer Vision (ECCV), 2014 
+
+In this paper we study the problem of object detection for RGB-D images using semantically rich image and depth features. We pro- pose a new geocentric embedding for depth images that encodes height above ground and angle with gravity for each pixel in addition to the hor- izontal disparity. We demonstrate that this geocentric embedding works better than using raw depth images for learning feature representations with convolutional neural networks. Our final object detection system achieves an average precision of 37.3%, which is a 56% relative improve- ment over existing methods. We then focus on the task of instance seg- mentation where we label pixels belonging to object instances found by our detector. For this task, we propose a decision forest approach that classifies pixels in the detection window as foreground or background using a family of unary and binary tests that query shape and geocentric pose features. Finally, we use the output from our object detectors in an existing superpixel classification framework for semantic scene segmentation and achieve a 24% relative improvement over current state-of-the-art for the object categories that we study. We believe advances such as those represented in this paper will facilitate the use of perception in fields like robotics.
+
+
+#### Citing ####
+If you find this code useful in your research, please consider citing:
+
+    @incollection{guptaECCV14,
+      author = {Saurabh Gupta and Ross Girshick and Pablo Arbelaez and Jitendra Malik},
+      title = {Learning Rich Features from {RGB-D} Images for Object Detection and Segmentation},
+      booktitle = ECCV,
+      year = {2014},
+    }
+
+#### License ####
+RGBD Utils are released under the Simplified BSD License (refer to the LICENSE file for details).
+
 #### Installation Instructions ####
 0. Create directory, checkout eccv14-code, utils, rgbdutils, nyu-hooks
 
@@ -36,7 +57,7 @@
   cd ..
   ```
 
-### Building ###
+#### Building ####
 0. Build caffe (Adjust paths for CUDA / MATLAB in Makefile.config.example and copy to Makefile.config)
 
   ```shell
@@ -62,8 +83,8 @@
   
   ```
 
-### Inference ###
-#### Contour Detection, UCMs, Region Proposals and Detection on a new image ####
+#### Inference ####
+##### Contour Detection, UCMs, Region Proposals and Detection on a new image #####
   ```matlab
   %%
   demo();
@@ -73,8 +94,8 @@
     run_all(color_image, depth_image, rawdepth_image, camera_matrix, []);
   ```
   
-### Training ###
-#### Contour Detection ####
+#### Training ####
+##### Contour Detection #####
 0. Run the following in MATLAB
 
   ```matlab
@@ -83,7 +104,7 @@
   jobName = 'test_edge_model'; script_edges;
   ```
 
-#### UCMs and Region Proposals ####
+##### UCMs and Region Proposals #####
 0. Run the following in MATLAB
 
   ```matlab
@@ -95,7 +116,7 @@
   jobName = 'region-detect'; script_regions;
   ```
 
-#### Object detectors: finetuning, training ####
+##### Object detectors: finetuning, training #####
 0. Run the following in MATLAB. At the end of this, you will get 2 finetuning commands that you need to use with caffe for finetuning.
 
   ```matlab
