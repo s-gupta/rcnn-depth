@@ -71,25 +71,26 @@ RGBD Utils are released under the Simplified BSD License (refer to the LICENSE f
   ```shell
   cd eccv14-code/rgbdutils/imagestack/
   make all -j 16
-  cd ..
+  cd ../../../
   ```
   
-0. Build toolboxes, MCG, RCNN.
+0. Build toolboxes, MCG, RCNN. Start MATLAB in the folder eccv14-code
 
   ```matlab
   mcg_build();
   rcnn_build();
+  toolboxCompile();
   structured_edges_build();
-  
   ```
 
 #### Inference ####
 ##### Contour Detection, UCMs, Region Proposals and Detection on a new image #####
   ```matlab
-  %%
+  %% Should produce results on the image in demo-data 
   demo();
   
-  %% See run_all.m
+  %% See run_all.m, demo.m to figure out what units / data type
+  % each image is in.
   [E, ucm2, candidates, detection_scores_no_nms, cls] = ...
     run_all(color_image, depth_image, rawdepth_image, camera_matrix, []);
   ```
