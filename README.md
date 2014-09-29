@@ -1,19 +1,19 @@
 ### Installation Instructions ###
 0. Checkout eccv14-code, utils, rgbdutils, nyu-hooks
-```
-#!sh
-git clone git@bitbucket.org:saurabhgupta/eccv14-code.git
-git clone git@bitbucket.org:saurabhgupta/rgbdutils.git eccv14-code/rgbdutils
-git clone git@bitbucket.org:saurabhgupta/utils.git eccv14-code/utils
-```
+  ```
+  #!sh
+  git clone git@bitbucket.org:saurabhgupta/eccv14-code.git
+  git clone git@bitbucket.org:saurabhgupta/rgbdutils.git eccv14-code/rgbdutils
+  git clone git@bitbucket.org:saurabhgupta/utils.git eccv14-code/utils
+  ```
 0. Checkout caffe-code 
-```
-#!sh
-git clone https://github.com/BVLC/caffe.git eccv14-code/caffe
-cd eccv14-code/caffe
-git checkout e5cc609138a0bc4ce5177a67cf84952756d11b38
-cd ../../
-```
+  ```
+  #!sh
+  git clone https://github.com/BVLC/caffe.git eccv14-code/caffe
+  cd eccv14-code/caffe
+  git checkout e5cc609138a0bc4ce5177a67cf84952756d11b38
+  cd ../../
+  ```
 0. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks)
 ```
 #!sh
