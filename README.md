@@ -96,7 +96,7 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
   
 #### Training ####
 ##### Contour Detection #####
-0. Run the following in MATLAB
+0. Run the following in MATLAB (will require you to adapt jobParallel to run on your cluster / machine).
 
   ```matlab
   jobName = 'compute_edge_cues'; script_edges;
@@ -132,3 +132,14 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
   jobName = 'color_cache_features'; script_detection;
   res = rcnn_all('task-guptaetal', 'train', 'val');
   ```
+  
+#### Notes ####
+0. Although, the run_all function will produce outputs as produced by our system, if you are running the algorithm on a large set of images, it will be best to compute in batches using ``` scripts/script_regions.m``` and ```scripts/script_detection.m```
+0. The current release of the code does not produce any instance segmentation or semantic segmentation. We will try to release code for those parts as soon as possible. If you are particularly interested in these 2 parts please let me know.
+0. The current version of the code also does not include detectors finetuned on synthetic data, hence the performance is 1% worse than what we report in the paper (35.94% as oppsoed to 37.3%). Also, we accidently included 'cabinet' as a category in the finetuing, but never trained R-CNN detectors for the same. This version of the code mimicks the settings that were used to generate the tables in the papers.
+0. For contour detection the provided model produces the solid blue line in Figure 3 in the paper.
+0. We can also provide pre-computed results on the dataset. Please let me know if you want them.
+
+
+#### Contact ####
+If you find bugs / have questions, please let me know: Saurabh Gupta (sgupta [at] eecs [dot] berkeley [dot] edu)
