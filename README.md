@@ -1,10 +1,12 @@
 #### Installation Instructions ####
-0. Checkout eccv14-code, utils, rgbdutils, nyu-hooks
+0. Create directory, checkout eccv14-code, utils, rgbdutils, nyu-hooks
 
   ```shell
-  git clone git@bitbucket.org:saurabhgupta/eccv14-code.git
-  git clone git@bitbucket.org:saurabhgupta/rgbdutils.git eccv14-code/rgbdutils
-  git clone git@bitbucket.org:saurabhgupta/utils.git eccv14-code/utils
+  mkdir rcnn-depth && cd rcnn-depth
+  git clone git@github.com:s-gupta/rcnn-depth.git eccv14-code
+  git clone git@github.com:s-gupta/rgbdutils.git eccv14-code/rgbdutils
+  git clone git@github.com:s-gupta/utils.git eccv14-code/utils
+  git clone git@github.com:s-gupta/nyu-hooks.git eccv14-code/nyu-hooks
   ```
 
 0. Checkout caffe-code 
@@ -16,20 +18,13 @@
   cd ../../
     ```
   
-0. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks)
+0. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks), and external model data (Caffe trained Imagenet model, structured forests BSDS model).
 
   ```shell
   wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-data.tgz
   tar -xf eccv14-data.tgz
-  ```
-  
-0. Get the caffe models
-
-  ```shell
-  cd eccv14-code
-  wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-caffe-data.tgz
-  tar -xf eccv14-caffe-data.tgz 
-  cd ..
+  wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-external-data.tgz
+  tar -xf eccv14-external-data.tgz
   ```
 
 0. Get precomputed models.
@@ -42,7 +37,7 @@
   ```
 
 ### Building ###
-0. Build caffe (Adjust paths for CUDA / MATLAB in Makefile.config.example and copy to Makefile.config).
+0. Build caffe (Adjust paths for CUDA / MATLAB in Makefile.config.example and copy to Makefile.config)
 
   ```shell
   cd eccv14-code/caffe
@@ -51,15 +46,24 @@
   cd ../..
   ```
   
+0. Build imagestack (Adjust paths in eccv14-code/rgbdutils/imagestack/Makefile).
+  ```shell
+  cd eccv14-code/rgbdutils/imagestack/
+  make all -j 16
+  cd ..
+  ```
+  
 0. Build toolboxes, MCG, RCNN.
 
   ```matlab
   mcg_build();
   rcnn_build();
+  structured_edges_build();
+  
   ```
 
-### Running ###
-#### Detection on a new image ####
+### Inference ###
+#### Edges, UCMs, Region Proposals and Detection on a new image ####
   ```matlab
   %%
   demo();
@@ -69,7 +73,18 @@
     run_all(color_image, depth_image, rawdepth_image, camera_matrix, []);
   ```
   
-#### Edges, UCMs and Region Proposals ####
+### Training ###  
+#### Edges ####
+0. Run the following in MATLAB
+
+  ```matlab
+  jobName = 'compute_edge_cues'; script_edges;
+  jobName = 'train_edge_model'; script_edges;
+  jobName = 'test_edge_model'; script_edges;
+  
+  ```
+
+#### UCMs and Region Proposals ####
 0. Run the following in MATLAB
 
   ```matlab
@@ -81,7 +96,7 @@
   jobName = 'region-detect'; script_regions;
   ```
 
-#### Detector finetuning, training, testing ####
+#### Object detectors: finetuning, training ####
 0. Run the following in MATLAB. At the end of this, you will get 2 finetuning commands that you need to use with caffe for finetuning.
 
   ```matlab
