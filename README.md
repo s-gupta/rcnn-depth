@@ -1,10 +1,10 @@
 ### Installation Instructions ###
 0. Checkout eccv14-code, utils, rgbdutils, nyu-hooks
-  <pre>
-  $ git clone git@bitbucket.org:saurabhgupta/eccv14-code.git
-  $ git clone git@bitbucket.org:saurabhgupta/rgbdutils.git eccv14-code/rgbdutils
-  $ git clone git@bitbucket.org:saurabhgupta/utils.git eccv14-code/utils
-  </pre>
+        ```sh
+        git clone git@bitbucket.org:saurabhgupta/eccv14-code.git
+        git clone git@bitbucket.org:saurabhgupta/rgbdutils.git eccv14-code/rgbdutils
+        git clone git@bitbucket.org:saurabhgupta/utils.git eccv14-code/utils
+        ```
 0. Checkout caffe-code 
   <pre>
   $ git clone https://github.com/BVLC/caffe.git eccv14-code/caffe
@@ -51,14 +51,14 @@
   >> 
   </pre>
 #### Edges, UCMs and Region Proposals ####
-  <pre>
-  >> jobName = 'edges_to_ucms'; script_regions;
-  >> jobName = 'benchmark_multi_ucm'; script_regions;
-  >> jobName = 'pareto'; script_regions;
-  >> jobName = 'cache-mcg'; script_regions;
-  >> jobName = 'rank_training'; script_regions;
-  >> jobName = 'region-detect'; script_regions;
-  </pre>
+        ```matlab
+        >> jobName = 'edges_to_ucms'; script_regions;
+        >> jobName = 'benchmark_multi_ucm'; script_regions;
+        >> jobName = 'pareto'; script_regions;
+        >> jobName = 'cache-mcg'; script_regions;
+        >> jobName = 'rank_training'; script_regions;
+        >> jobName = 'region-detect'; script_regions;
+        ```
 
 #### Detector finetuning, training, testing ####
 0. Run the following on the MATLAB prompt. At the end of this, you will get 2 finetuning commands that you need to use with caffe for finetuning.
