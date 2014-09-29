@@ -1,4 +1,4 @@
-###Learning Rich Features from RGB-D Images for Object Detection and Segmentation###
+###Learning Rich Features from RGB-D Images for Object Detection and Segmentation ([pdf](http://www.cs.berkeley.edu/~sgupta/pdf/rcnn-depth.pdf))###
 *Saurabh Gupta, Ross Girshick, Pablo Arbeláez and Jitendra Malik*
 
 Presented at European Conference on Computer Vision (ECCV), 2014 
