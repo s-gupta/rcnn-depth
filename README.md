@@ -3,7 +3,7 @@
 
 Presented at European Conference on Computer Vision (ECCV), 2014 
 
-In this paper we study the problem of object detection for RGB-D images using semantically rich image and depth features. We pro- pose a new geocentric embedding for depth images that encodes height above ground and angle with gravity for each pixel in addition to the hor- izontal disparity. We demonstrate that this geocentric embedding works better than using raw depth images for learning feature representations with convolutional neural networks. Our final object detection system achieves an average precision of 37.3%, which is a 56% relative improve- ment over existing methods. We then focus on the task of instance seg- mentation where we label pixels belonging to object instances found by our detector. For this task, we propose a decision forest approach that classifies pixels in the detection window as foreground or background using a family of unary and binary tests that query shape and geocentric pose features. Finally, we use the output from our object detectors in an existing superpixel classification framework for semantic scene segmentation and achieve a 24% relative improvement over current state-of-the-art for the object categories that we study. We believe advances such as those represented in this paper will facilitate the use of perception in fields like robotics.
+In this paper we study the problem of object detection for RGB-D images using semantically rich image and depth features. We pro- pose a new geocentric embedding for depth images that encodes height above ground and angle with gravity for each pixel in addition to the horizontal disparity. We demonstrate that this geocentric embedding works better than using raw depth images for learning feature representations with convolutional neural networks. Our final object detection system achieves an average precision of 37.3%, which is a 56% relative improvement over existing methods. We then focus on the task of instance seg- mentation where we label pixels belonging to object instances found by our detector. For this task, we propose a decision forest approach that classifies pixels in the detection window as foreground or background using a family of unary and binary tests that query shape and geocentric pose features. Finally, we use the output from our object detectors in an existing superpixel classification framework for semantic scene segmentation and achieve a 24% relative improvement over current state-of-the-art for the object categories that we study. We believe advances such as those represented in this paper will facilitate the use of perception in fields like robotics.
 
 
 #### Citing ####
@@ -24,10 +24,10 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
 
   ```shell
   mkdir rcnn-depth && cd rcnn-depth
-  git clone git@github.com:s-gupta/rcnn-depth.git eccv14-code
-  git clone git@github.com:s-gupta/rgbdutils.git eccv14-code/rgbdutils
-  git clone git@github.com:s-gupta/utils.git eccv14-code/utils
-  git clone git@github.com:s-gupta/nyu-hooks.git eccv14-code/nyu-hooks
+  git clone https://github.com/s-gupta/rcnn-depth.git eccv14-code
+  git clone https://github.com/s-gupta/rgbdutils.git eccv14-code/rgbdutils
+  git clone https://github.com/s-gupta/utils.git eccv14-code/utils
+  git clone https://github.com/s-gupta/nyu-hooks.git eccv14-code/nyu-hooks
   ```
 
 0. Checkout caffe-code 
@@ -140,6 +140,11 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
 0. For contour detection the provided model produces the solid blue line in Figure 3 in the paper.
 0. We can also provide pre-computed results on the dataset. Please let me know if you want them.
 
+#### FAQs ####
+0. If you run out of memory on your GPU while extracting CNN features for object detection, you can decrease the batch size (which is currently set to 256). You will need to edit this in the following files: ```nyud2_finetuning / imagenet_*_256_fc6.prototxt``` and ```rcnn / rcnn_create_model.m```.
+
+#### Acknowledgements ####
+This work was sponsored by ONR SMARTS MURI N00014-09-1-1051, ONR MURI N00014-10-1-0933 and a Berkeley Fellowship. The GPUs used in this research were generously donated by the NVIDIA Corporation. We are also thankful to Bharath Hariharan, for all the useful discussions. We also thank Piotr Doll ́ar for helping us with their contour detection code.
 
 #### Contact ####
 If you find bugs / have questions, please let me know: Saurabh Gupta (sgupta [at] eecs [dot] berkeley [dot] edu)
