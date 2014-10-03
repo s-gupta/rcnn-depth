@@ -1,4 +1,4 @@
-function features = genericFeatures(superpixels, sp2reg, param, data)
+function features = generic_features(superpixels, sp2reg, param, data)
 
   %param.selN = 4;
   %param.localNormalExt = 'oPbV5_6';
@@ -23,7 +23,7 @@ function features = genericFeatures(superpixels, sp2reg, param, data)
   pcRot = rotatePC(pc,R');
 
   % Find normals for each region
-  [NR b gr grr nSamples] = computeRegionNormals(pc, superpixels, sp2reg);
+  [NR b gr grr nSamples] = compute_regions_normals(pc, superpixels, sp2reg);
   NRRot = R'*NR;
   
   %Feature 1 angle with the gravity vector.
