@@ -1,6 +1,6 @@
 function startup()
   % genPath = {'piotr-structured-edges-pami', 'rgbdutils', 'utils'};
-  addPath = {'nyu-hooks', 'scripts', 'mcg', 'utils', 'caffe/matlab/caffe/', 'rgbdutils'};
+  addPath = {'nyu-hooks', 'scripts', 'mcg', 'utils', 'caffe/matlab/caffe/', 'rgbdutils', 'semantic-segmentation'};
   genPath = {'structured-edges', 'rcnn'};
 
   for i = 1:length(addPath),

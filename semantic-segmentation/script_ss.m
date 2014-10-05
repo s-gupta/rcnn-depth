@@ -1,5 +1,5 @@
 p = get_paths(); imname = 'img_5001';
-ucm_thresh = 0.16;
+ucm_thresh = 0.14;
 amodal_thresh = [-1 26];
 C = cropCamera(getCameraParam('color'));
 
@@ -28,12 +28,18 @@ normalParam.patchSize = [3 10];
   1, C, ones(size(z)));
 [N2 b2] = computeNormalsSquareSupport(z./100, missingMask, normalParam.patchSize(2),...
   1, C, ones(size(z)));
-N = N1; 
 
 % Compute the direction of gravity
 yDir = getYDir(N2, yDirParam);
 
 genericData = struct('pc', pc, 'clusters', clusters, 'superpixels', sp,...
-      'normals', N1, 'yDir', yDir, 'zgMax', zgMax, 'bgOriented', bgOriented, 'bgMax', bgMax);
+      'normals', N1, 'yDir', yDir, ...
+      'zgMax', zeros([size(RD), 15]), ...
+      'bgOriented', zeros([size(RD), 8]), ...
+      'bgMax', zeros([size(RD), 3]));
 % Compute Features also saves the features in the cache directory.
-[f, sp2reg] = computeFeatures(imList{i}, paths, 'generic', genericParam, genericData);
+genericParam.fName = @generic_features;
+[f, sp2reg] = compute_ss_features([], [], genericParam, genericData);
+
+
+
