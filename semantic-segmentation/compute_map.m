@@ -1,4 +1,4 @@
-function [map, dimensions] = computeMap(imName, paths, param, data)
+function [map, dimensions] = compute_map(imName, paths, param, data)
 
   switch(param.typ)
     case 'colorSift',
@@ -12,8 +12,10 @@ function [map, dimensions] = computeMap(imName, paths, param, data)
       [map] = gTextons(data.pc, data.N, data.yDir, param);
 
   end
-
-  fileName = fullfile(paths.mapDir, param.typ, strcat(imName, '.mat'));
   dimensions = param.dimensions;
-  save(fileName, 'map', 'dimensions');
+
+  if(~isempty(imName)),
+    fileName = fullfile(paths.mapDir, param.typ, strcat(imName, '.mat'));
+    save(fileName, 'map', 'dimensions');
+  end
 end

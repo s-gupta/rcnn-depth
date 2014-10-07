@@ -1,5 +1,4 @@
 function bow_map = sift(I, siftParam, vocab)
-  paths = getPaths();
   
   % Sift Param
   % siftParam = struct('ds_sampling', 1, 'scales', 1.2, 'descriptor', 'opponentsift');
@@ -15,7 +14,7 @@ function bow_map = sift(I, siftParam, vocab)
   end
 
   imwrite(im2uint8(I), f{1}, 'png');
-  str = sprintf('%s %s --detector densesampling --ds_spacing %d --ds_scales %0.4f --descriptor %s --output %s\n', paths.siftLib, f{1}, siftParam.ds_sampling, siftParam.scales, siftParam.descriptor, f{2});
+  str = sprintf('%s %s --detector densesampling --ds_spacing %d --ds_scales %0.4f --descriptor %s --output %s\n', siftParam.siftLib, f{1}, siftParam.ds_sampling, siftParam.scales, siftParam.descriptor, f{2})
   system(str);
   
   info = imfinfo(f{1});
