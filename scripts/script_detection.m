@@ -4,7 +4,7 @@ if strcmp(jobName, 'save_disparity')
   outDir = p.ft_disparity_dir;
   imList = getImageSet('all');
   parfor i = 1:length(imList),
-    args{i} = {imList{i}, C, outDir}; 
+    args{i} = {imList{i}, C, outDir, [], []}; 
     saveDisparity(args{i}{:});
   end
 end
@@ -25,7 +25,7 @@ if strcmp(jobName, 'save_hha')
   outDir = p.ft_hha_dir;
   imList = getImageSet('all');
   parfor i = 1:length(imList),
-    args{i} = {imList{i}, C, outDir}; 
+    args{i} = {imList{i}, C, outDir, [], []}; 
     saveHHA(args{i}{:});
   end
 end
