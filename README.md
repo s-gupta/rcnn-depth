@@ -50,9 +50,16 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
 
 0. Get precomputed models.
  
-  ```
+  ```shell
   wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-models.tgz
   tar -xf eccv14-models.tgz 
+  ```
+
+0. [Optional] Get precomputed results
+
+  ```shell
+  wget ftp://ftp.cs.berkeley.edu/pub/projects/vision/rcnn-depth-eccv14/eccv14-cachedir.tgz
+  tar -xf eccv14-cachedir.tgz # Also contains the models
   cd ..
   ```
 
