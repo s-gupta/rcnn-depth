@@ -33,6 +33,13 @@ function p = get_paths(runname)
       p.proto_dir = fullfile(p.ft_dir, 'protodir');
       p.snapshot_dir = fullfile(p.ft_dir, 'snapshot');
 
+  p.ss_dir = fullfile(p.cache_dir, 'sseg');
+    p.ss_feature_dir = fullfile(p.ss_dir, 'features');
+    p.ss_generic = fullfile(p.ss_feature_dir, 'generic');
+    p.ss_gTexton = fullfile(p.ss_feature_dir, 'gTexton');
+    p.ss_sift = fullfile(p.ss_feature_dir, 'sift');
+    p.ss_map_sift = fullfile(p.ss_feature_dir, 'sift-map');
+
   f = fieldnames(p);
   for i = 1:length(f), exists_or_mkdir(p.(f{i})); end
   
