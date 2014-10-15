@@ -3,7 +3,7 @@ function [features, superpixels, spArea] = getSPFeatures(imName, paths, param)
 	for j = 1:length(param.featureTyp),
 		typ = param.featureTyp{j};
 	
-		fileName = fullfile(paths.featuresDir, typ, strcat(imName, '.mat'));
+		fileName = fullfile(paths.ss_feature_dir, typ, strcat(imName, '.mat'));
 
 		dt = load(fileName);
 		selThresh = param.selThresh{j};

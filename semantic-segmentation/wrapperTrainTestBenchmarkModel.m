@@ -1,14 +1,15 @@
-function evalRes = wrapperTrainModel(trSet, valSet, testSet, typ, classifierType, classMapping)
-	paths = getPaths();
-	%trSet = 'train1';
-	%valSet = 'train2';
-	%testSet = 'val';
-	%typ = 'generic';
-	%classifierType = 'svm-full';
-	%classMapping = 'classMapping40';
-	%numClass = 40;
+function evalRes = wrapperTrainTestBenchmarkModel(trSet, valSet, testSet, typ, classifierType, classMapping)
+	% trSet = 'train1';
+	% valSet = 'train2';
+	% testSet = 'val';
+	% typ = 'generic';
+	% classifierType = 'svm-full';
+	% classMapping = 'classMapping40';
+	% numClass = 40;
 
-	pt = getMetadata(classMapping);
+	paths = get_paths();
+	
+  pt = getMetadata(classMapping);
 	numClass = length(pt.className);
 	if(numClass == 40)
 		task = 'entryLevel';

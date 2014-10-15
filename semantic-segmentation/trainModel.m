@@ -10,7 +10,7 @@ function modelFile = trainModel(imSet, paths, param)
 	end
 
 	% Loading the features here
-	cacheFile = fullfile(paths.featureCache, strcat(featureParam.featureCacheName, '_', param.fileSuffix, '.mat'))
+	cacheFile = fullfile(paths.ss_feature_dir, strcat(featureParam.featureCacheName, '_', param.fileSuffix, '.mat'))
 	if(exist(cacheFile, 'file') & param.useCache)
 		dt = load(cacheFile);
 		assert(isequal(imList, dt.imList), 'Image sets not same.... re-gathering features.. \n');
@@ -31,7 +31,7 @@ function modelFile = trainModel(imSet, paths, param)
 	end
 
 	% Training the model here
-	modelFile = fullfile(paths.modelDir, strcat(sprintf('%s_%s', param.classifierFileName, param.fileSuffix), '.mat')); 
+	modelFile = fullfile(paths.ss_model_dir, strcat(sprintf('%s_%s', param.classifierFileName, param.fileSuffix), '.mat')); 
 	try
 		dt = load(modelFile);
 		model = dt.model;
