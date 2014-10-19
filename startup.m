@@ -6,12 +6,13 @@ function startup()
   for i = 1:length(addPath),
     addpath(addPath{i});
   end
+  startup_utils;
+  startup_rgbdutils;
+  startup_mcg;
+  addpath('semantic-segmentation');
 
   for i = 1:length(genPath),
     addpath(genpath_exclude(genPath{i}, '.git'));
   end
-  startup_utils;
-  startup_rgbdutils;
-  startup_mcg;
   fprintf('startup done\n');
 end

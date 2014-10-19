@@ -88,12 +88,17 @@ function model = svmMulticlassTrain(X, Y, W, param, fileName, svmParam, mlrParam
       x = prepareDataSVM(X{trVal}, model.fNorm, model.iksvmN, model.isSparse, model.mapNanToZero);
       [lFeatures{trVal}(i,:), ~] = testSVM(x, modelSVM(i));
       
+      trVal = 2;
+      x = prepareDataSVM(X{trVal}, model.fNorm, model.iksvmN, model.isSparse, model.mapNanToZero);
+      [lFeatures{trVal}(i,:), ~] = testSVM(x, modelSVM(i));
+      
       %fileName = sprintf('%d-%s.mat', getPID(), datestr(now, 'yyyymmddTHHMMSS'));
       save(fileName, 'modelSVM', 'svmParam', 'ap');
     end
     fprintf('Trained OVA SVMs.\n\n');
 
     clear tmpModel
+    keyboard;
     %Train a Multi class logistic on the features from the one versus all classifiers.
     for i = 1:length(param.CMLR),
       trVal = 2;

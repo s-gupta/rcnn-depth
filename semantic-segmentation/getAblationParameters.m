@@ -5,7 +5,7 @@ function PP = getAblationParameters(typ)
 	switch typ,			
 		case 'categorySpecific-level1-all',
 		% Full system ablation 
-			PP.featureTyp = {'gTexton', 'colorSift'};
+			PP.featureTyp = {'gTexton', 'sift'};
 			PP.selThresh = {[1], [1]};
 			PP.featureCacheName = 'categorySpecific-all';
 			PP.nVar = 1900;

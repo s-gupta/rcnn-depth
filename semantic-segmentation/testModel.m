@@ -10,8 +10,8 @@ function [softOutputDir hardOutputDir] = testModel(imSet, paths, modelFileName)
 
 	[feature, sp, spArea] = loadExamples(imList, paths, struct('featureParam', featureParam, 'gtParam', gtParam), false);
 
-	softOutputDir = fullfile(paths.outsDir, strcat(sprintf('%s_%s', param.classifierFileName, param.fileSuffix)));
-	hardOutputDir = fullfile(paths.ssOutDir, strcat(sprintf('%s_%s', param.classifierFileName, param.fileSuffix)));
+	softOutputDir = fullfile(paths.ss_dir, 'soft_outs', strcat(sprintf('%s_%s', param.classifierFileName, param.fileSuffix)));
+	hardOutputDir = fullfile(paths.ss_dir, 'hard_outs', strcat(sprintf('%s_%s', param.classifierFileName, param.fileSuffix)));
 	
 	if(~exist(softOutputDir, 'dir')) mkdir(softOutputDir); end
 	if(~exist(hardOutputDir, 'dir')) mkdir(hardOutputDir); end
