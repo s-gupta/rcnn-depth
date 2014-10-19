@@ -38,6 +38,16 @@ function evalRes = wrapperTrainTestBenchmarkModel(trSet, valSet, testSet, typ, c
 
 	modelFileName = trainModel(imSet, paths, trainingParam);
 	[softOutputDir, hardOutputDir] = testModel(testSet, paths, modelFileName);
-	evalRes = benchmarkSemantic(hardOutputDir, classMapping, testSet);
+	evalResExternal = benchmarkSemantic(hardOutputDir, classMapping, testSet);
+ 
+  evalResInternal = benchmarkSSInternal(softOutputDir, testSet, bParam);
 
+  bParam = struct('infoFile', classMapping, 'ignoreBck', true, 'fieldName', 'rawScores');
+  evalResRawScores = benchmark_indiv(softOutputDir, testSet, bParam);
+  bParam = struct('infoFile', classMapping, 'ignoreBck', true, 'fieldName', 'scores');
+  evalResScores = benchmark_indiv(softOutputDir, testSet, bParam);
+
+  save(sprintf('%s-%s-indivCat.mat', softOutputDir, testSet), 'evalResScores', 'evalResRawScores', 'evalResInternal', 'evalResExternal');
+  fprintf('Saving detailed results in %s.\n', sprintf('%s-%s-indivCat.mat', softOutputDir, testSet));
+  evalRes = evalResExternal;
 end
