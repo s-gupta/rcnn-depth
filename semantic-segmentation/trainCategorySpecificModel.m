@@ -8,7 +8,7 @@ function trainCategorySpecificModel(imSet, paths, param, II)
 	end
 
 	%Load the features.
-	cacheFile = fullfile(paths.featureCache, strcat(featureParam.featureCacheName, '_', param.fileSuffix, '.mat')); 
+	cacheFile = fullfile(paths.ss_feature_dir, strcat(featureParam.featureCacheName, '_', param.fileSuffix, '.mat')); 
 	if(exist(cacheFile, 'file') & param.useCache)
 		dt = load(cacheFile);
 		assert(isequal(imList, dt.imList), 'Image sets not same.... re-gathering features.. \n');
@@ -41,7 +41,7 @@ function trainCategorySpecificModel(imSet, paths, param, II)
 		end
 
 		%Train the model on train set
-		modelFile = fullfile(paths.modelDir, featureParam.featureCacheName, strcat(sprintf('%s_%02d', param.classifierFileName, I), '.mat')); 
+		modelFile = fullfile(paths.ss_model_dir, featureParam.featureCacheName, strcat(sprintf('%s_%02d', param.classifierFileName, I), '.mat')); 
 		try
 			load(modelFile)
 		catch

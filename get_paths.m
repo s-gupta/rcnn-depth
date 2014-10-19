@@ -34,6 +34,7 @@ function p = get_paths(runname)
       p.snapshot_dir = fullfile(p.ft_dir, 'snapshot');
 
   p.ss_dir = fullfile(p.cache_dir, 'sseg');
+    p.ss_model_dir = fullfile(p.ss_dir, 'model');
     p.ss_feature_dir = fullfile(p.ss_dir, 'features');
     p.ss_generic = fullfile(p.ss_feature_dir, 'generic');
     p.ss_gTexton = fullfile(p.ss_feature_dir, 'gTexton');
