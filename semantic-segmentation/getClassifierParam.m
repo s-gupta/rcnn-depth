@@ -9,7 +9,7 @@ switch(typ)
 			struct('iksvmN', 3, 'C', C, 'w1', w, 'bias', b, ...
 				'numClass', 1, 'CMLR', 1, 'biasMLR', 1, ...
 				'mapNanToZero', false, 'useValForTraining', data.useVal, 'weighted', false, ...
-				'metric', 'ap1min', 'mclMetric', 'multiClassAccuracy');
+				'metric', 'ap1min', 'mclMetric', 'multiClassAccuracy', 'mclWeighted', true);
 
 	case 'svm-full',
 		param.C = 10.^[-2:1:1 -2:1:1];
@@ -23,6 +23,7 @@ switch(typ)
 		param.mapNanToZero = true;
 		param.weighted = false; 
 		param.mclMetric = 'multiClassAccuracy'; 
+		param.mclWeighted = 1;
 		param.useValForTraining = data.useVal;
 
 	case 'tree-full',
