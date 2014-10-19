@@ -1,32 +1,17 @@
 function features = detectionFeatures(superpixels, sp2reg, param, data)
+% function features = detectionFeatures(superpixels, sp2reg, param, data)
 	[nSP nReg] = size(sp2reg);
 	spArea = histc(superpixels(:),1:nSP)';
 	regArea = spArea*sp2reg;
 	
-	tic;
+	tt = tic();
   switch param.typ,
-    case {'ssMap', 'det'},
-      [pred, ind] = getCube(param, data);
-	    oC = @(i) objectContext(param.sz, param.maxPooling, param.contextR, pred, i, sp2reg, superpixels);
-      oContextF = arrayfun(oC, 1:nReg, 'UniformOutput', false);
-      F{1} = cell2mat(oContextF);
-    case {'self'},
-      [pred, ind] = getCube(param, data);
-	    oC = @(i) selfContext(param.sz, param.maxPooling, param.contextR, pred, i, sp2reg, superpixels);
-      oContextF = arrayfun(oC, 1:nReg, 'UniformOutput', false);
-      F{1} = cell2mat(oContextF);
-    case {'detInst'},
-      [pred, ind] = getCube(param, data);
-	    oC = @(i) detInst(pred, ind, i, sp2reg, superpixels);
-      oContextF = arrayfun(oC, 1:nReg, 'UniformOutput', false);
-      F{1} = cell2mat(oContextF);
-    
-    case {'detInstV2', 'detInstV3', 'detInstV4'},
+    case {'detection-box'},
 	    oC = @(i) detFeature(data.Z, data.ds{i}, data.thresh(i), sp2reg, superpixels, param.assignTyp);
       oContextF = arrayfun(oC, 1:length(data.thresh), 'UniformOutput', false);
       F{1} = cat(1, oContextF{:});
   end
-  fprintf('Object Context Feature : %0.3f seconds.\n',toc);
+  fprintf('Object Context Feature : %0.3f seconds.\n', toc(tt));
 
 	features = cat(1,F{:});
   assert(length(find(isnan(features))) == 0, 'Nan Features!!');
@@ -100,55 +85,6 @@ function f = getMeanZ(z, bbox)
     f(:,i) = [median(zi), mean(zi)];
   end
 end
-
-function f = detInst(pred, ind, i, sp2reg, superpixels)
-	sp = ismember(superpixels, find(sp2reg(:,i)));
-  
-  %% Find the max scoring detection within the support of this super pixel
-	pred = reshape(pred, [size(pred,1)*size(pred,2), size(pred,3)]);
-	ind = reshape(ind, [size(ind,1)*size(ind,2), size(ind,3)]);
-
-  pred = pred(sp(:), :);
-  ind = ind(sp(:), :);
-
-  [sc, maxPixel] = max(pred, [], 1);
-  detId = ind(sub2ind(size(ind), maxPixel, 1:size(ind,2)));
-  detId = detId(:)';
-
-  incl = mean(double(bsxfun(@eq, ind, detId)), 1);
-  incl(detId == 0) = 0;
-  noDet = double(detId == 0);
-  sc(detId == 0) = -2;
-
-  f = cat(1, sc, incl, log(max(0.1, sc+2.1)), log(max(0.1, incl+0.1)), (2+sc).*incl, (2+sc).^2.*incl, noDet);
-  f = f(:);
-  f(isnan(f)) = 0;
-end
-
-function [pred, ind] = getCube(param, data)
-  % Load the things from V17 and make HxWx40 matrices
-  switch param.typ
-    case {'ssMap', 'self'},
-      dt = load(fullfile(param.confMapDir, data.imName));  %sprintf('%s_%s.mat', imNumToName(im_i), param.inVer)));
-      tt = cell2mat(...
-        arrayfun(...
-          @(x) reshape(dt.rawScores(x, dt.superpixels), [1 size(dt.superpixels)]), ...
-          1:size(dt.rawScores,1), 'UniformOutput', false...
-        )'...
-      );
-      tt = permute(tt, [2 3 1]);
-      pred = tt; clear tt;
-
-    case {'det', 'detInst'},
-      %% In data there are the 93 detections, use them to make the probability cube
-      % data.ds,  1 to 93 or whatever.
-      pred = zeros([data.imsize numel(data.ds)]);
-      for i = 1:numel(data.ds),
-        [pred(:,:,i) ind(:,:,i)] = pasteBoxes(data.imsize, data.ds{i});
-      end
-  end
-end
-
 
 function [out ind] = pasteBoxes(sz, ds, op)
   out = zeros(sz);
