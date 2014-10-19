@@ -47,6 +47,15 @@ function PP = getAblationParameters(typ)
 			PP.nVar = length(PP.selF)
 			%PP.numClass = entryLevelNumClass;
 
+    case 'full+deepdet',
+		% Full system 
+			PP.featureTyp = {'generic', 'categorySpecific-all', 'detection'};
+			PP.selThresh = {[1 2], [1 2], [1]};
+			PP.nVar = 282;
+			PP.featureCacheName = 'anc-full-deepdet';
+			%PP.numClass = entryLevelNumClass;
+
+
 		case 'full',
 		% Full system 
 			PP.featureTyp = {'generic', 'categorySpecific-all'};

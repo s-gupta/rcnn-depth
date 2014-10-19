@@ -40,7 +40,8 @@ function p = get_paths(runname)
     p.ss_gTexton = fullfile(p.ss_feature_dir, 'gTexton');
     p.ss_sift = fullfile(p.ss_feature_dir, 'sift');
     p.ss_map_sift = fullfile(p.ss_feature_dir, 'sift-map');
-    p.ss_det_dir = fullfile(p.ss_feature_dir, 'detection-box');
+    p.ss_det_dir = fullfile(p.ss_feature_dir, 'detection-boxes');
+    p.ss_det_feature = fullfile(p.ss_feature_dir, 'detection');
 
   f = fieldnames(p);
   for i = 1:length(f), exists_or_mkdir(p.(f{i})); end

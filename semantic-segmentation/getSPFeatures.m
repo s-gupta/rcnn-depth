@@ -10,7 +10,7 @@ function [features, superpixels, spArea] = getSPFeatures(imName, paths, param)
 
 		for i = 1:length(selThresh),
 			count = count+1;
-			F{count} = dt.features{selThresh(i)}(:,dt.clusters(:,selThresh(i)));
+			F{count} = double(dt.features{selThresh(i)}(:,dt.clusters(:,selThresh(i))));
 		end
 	end
 	features = cat(1,F{:});  

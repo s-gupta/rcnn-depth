@@ -13,22 +13,6 @@ if strcmp(jobName, 'compute_ss_features')
   [jobId jobDir] = jobParallel(jobName, resourceParam, jobParam, args);
 end
 
-if strcmp(jobName, 'ablationStudy')
-	classMapping = 'classMapping40';
-	trSet = 'train1';
-	valSet = 'train2';
-	testSet = 'val';
-	classifier = {'svm-full'};
-	typ = {'full', 'generic', 'categorySpecific'};
-
-	for i = 1:length(classifier),
-		for j = 1:length(typ), 
-			evalResAblation(i,j) = wrapperTrainTestBenchmarkModel(trSet, valSet, testSet, typ{j}, classifier{i}, classMapping);
-			fprintf('%s - %s, accuracy found to be, %0.3f.\n', classifier{i}, typ{j}, evalResAblation(i,j).fwavacc);
-		end
-	end
-end
-
 if strcmp(jobName, 'detectors_for_sseg')
   res = rcnn_all('task-detection', 'rgb_hha', 'trainval', 'test');
   res = rcnn_all('task-detection', 'rgb_hha', 'train', 'val');
@@ -63,12 +47,44 @@ if strcmp(jobName, 'deepDetFeatures')
   assignTyp = {'bestScore'}; pThresh = 0.50;
   threshSet = 'val'; boxFieldName = 'boxes'; out_dir = p.ss_det_feature;
   K = 1; 
-  for i = 1:length(imSet), for j = 1:length(assignTyp), for k = 1:length(pThresh), for l = 1:K,
+  for i = 2:length(imSet), for j = 1:length(assignTyp), for k = 1:length(pThresh), for l = 1:K,
     imlist = getImageSet(imSet{i});
     args{end+1} = {imSet{i}, typ, l:K:length(imlist), catName, detDir, assignTyp{j}, pThresh(k), threshSet, nmsThresh, boxFieldName, p.ss_generic, out_dir};
+    compute_detection_features(args{end}{:});
   end, end, end, end
 
-  jobParam = struct('numThreads', 1, 'codeDir', pwd(), 'preamble', '', 'matlabpoolN', 4, 'globalVars', {{}}, 'fHandle', @compute_detection_features, 'numOutputs', 0);
-  resourceParam = struct('mem', 4, 'hh', 8, 'numJobs', -1, 'ppn', 4, 'nodes', 1, 'logDir', '/work4/sgupta/pbsBatchDir/', 'queue', 'psi', 'notif', false, 'username', 'sgupta', 'headNode', 'zen');
-  [jobId jobDir] = jobParallel(jobName, resourceParam, jobParam, args);
+  % jobParam = struct('numThreads', 1, 'codeDir', pwd(), 'preamble', '', 'matlabpoolN', 4, 'globalVars', {{}}, 'fHandle', @compute_detection_features, 'numOutputs', 0);
+  % resourceParam = struct('mem', 4, 'hh', 8, 'numJobs', -1, 'ppn', 4, 'nodes', 1, 'logDir', '/work4/sgupta/pbsBatchDir/', 'queue', 'psi', 'notif', false, 'username', 'sgupta', 'headNode', 'zen');
+  % [jobId jobDir] = jobParallel(jobName, resourceParam, jobParam, args);
 end
+
+if strcmp(jobName, 'ablationStudy')
+	classMapping = 'classMapping40';
+	trSet = 'train1'; valSet = 'train2';	testSet = 'val';
+	classifier = {'svm-full'};
+	typ = {'full+deepdet', 'full', 'generic', 'categorySpecific'};
+
+	for i = 1:length(classifier),
+		for j = 1, %:length(typ), 
+			evalResAblation(i,j) = wrapperTrainTestBenchmarkModel(trSet, valSet, testSet, typ{j}, classifier{i}, classMapping);
+			fprintf('%s - %s, accuracy found to be, %0.3f.\n', classifier{i}, typ{j}, evalResAblation(i,j).fwavacc);
+		end
+	end
+end
+
+
+if strcmp(jobName, 'full-sseg')
+	classMapping = 'classMapping40';
+	trSet = 'train'; valSet = 'val';	testSet = 'test';
+	classifier = {'svm-full'};
+	typ = {'full', 'full+deepdet'};
+
+	for i = 1:length(classifier),
+		for j = 1:2, %length(typ), 
+			evalRes(i,j) = wrapperTrainTestBenchmarkModel(trSet, valSet, testSet, typ{j}, classifier{i}, classMapping);
+			fprintf('%s - %s, accuracy found to be, %0.3f.\n', classifier{i}, typ{j}, evalRes(i,j).fwavacc);
+		end
+	end
+end
+
+

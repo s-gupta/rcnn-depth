@@ -1,5 +1,5 @@
-function wrapperComputeFeatures4(imSet, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet, nmsThresh, boxFieldName, sp_dir, out_dir)
-% function wrapperComputeFeatures4(imSet, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet)
+function compute_detection_features(imSet, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet, nmsThresh, boxFieldName, sp_dir, out_dir)
+% function compute_detection_features(imSet, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet)
 % Input:
 %   imSet - set to compute the features for
 %   indToDo - indexes in imSet for which you want to run this thing (too slow)
