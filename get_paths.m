@@ -23,12 +23,12 @@ function p = get_paths(runname)
   %   p.ft_image_dir = fullfile(p.caffe_dir, 'ft_images');
   %   p.ft_hha_dir = fullfile(p.caffe_dir, 'ft_hha');
   
-  p.detectior_dir = fullfile(p.cache_dir, 'detection');
-  p.cnnF_cache_dir = fullfile(p.detectior_dir, 'feat_cache');
-    p.ft_image_dir = fullfile(p.detectior_dir, 'ft_images');
-    p.ft_hha_dir = fullfile(p.detectior_dir, 'ft_hha');
-    p.ft_disparity_dir = fullfile(p.detectior_dir, 'ft_disparity');
-    p.ft_dir = fullfile(p.detectior_dir, 'finetuning');
+  p.detection_dir = fullfile(p.cache_dir, 'detection');
+  p.cnnF_cache_dir = fullfile(p.detection_dir, 'feat_cache');
+    p.ft_image_dir = fullfile(p.detection_dir, 'ft_images');
+    p.ft_hha_dir = fullfile(p.detection_dir, 'ft_hha');
+    p.ft_disparity_dir = fullfile(p.detection_dir, 'ft_disparity');
+    p.ft_dir = fullfile(p.detection_dir, 'finetuning');
       p.wf_dir = fullfile(p.ft_dir, 'windowfile');
       p.proto_dir = fullfile(p.ft_dir, 'protodir');
       p.snapshot_dir = fullfile(p.ft_dir, 'snapshot');
@@ -40,6 +40,7 @@ function p = get_paths(runname)
     p.ss_gTexton = fullfile(p.ss_feature_dir, 'gTexton');
     p.ss_sift = fullfile(p.ss_feature_dir, 'sift');
     p.ss_map_sift = fullfile(p.ss_feature_dir, 'sift-map');
+    p.ss_det_dir = fullfile(p.ss_feature_dir, 'detection-box');
 
   f = fieldnames(p);
   for i = 1:length(f), exists_or_mkdir(p.(f{i})); end
