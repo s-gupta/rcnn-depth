@@ -4,14 +4,12 @@ function features = detectionFeatures(superpixels, sp2reg, param, data)
 	spArea = histc(superpixels(:),1:nSP)';
 	regArea = spArea*sp2reg;
 	
-	tt = tic();
   switch param.typ,
     case {'detection-box'},
 	    oC = @(i) detFeature(data.Z, data.ds{i}, data.thresh(i), sp2reg, superpixels, param.assignTyp);
       oContextF = arrayfun(oC, 1:length(data.thresh), 'UniformOutput', false);
       F{1} = cat(1, oContextF{:});
   end
-  fprintf('Object Context Feature : %0.3f seconds.\n', toc(tt));
 
 	features = cat(1,F{:});
   assert(length(find(isnan(features))) == 0, 'Nan Features!!');

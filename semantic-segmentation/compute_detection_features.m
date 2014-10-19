@@ -1,8 +1,7 @@
-function wrapperComputeFeatures4(imSet, ucmThresh, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet, dirNameSuffix, nmsThresh, boxFieldName, sp_dir, out_dir)
-% function wrapperComputeFeatures4(imSet, ucmThresh, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet)
+function wrapperComputeFeatures4(imSet, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet, nmsThresh, boxFieldName, sp_dir, out_dir)
+% function wrapperComputeFeatures4(imSet, typ, indToDo, detClass, detDir, assignType, pThresh, threshSet)
 % Input:
 %   imSet - set to compute the features for
-%   ucmThesh - what ucm theshold to use for computing these features
 %   indToDo - indexes in imSet for which you want to run this thing (too slow)
 %   typ - 'self', 'det', 'ssMap', 'detInst', 'detInstV2', 'detInstV4' 
 %   detClass - which detectors to use
@@ -10,7 +9,6 @@ function wrapperComputeFeatures4(imSet, ucmThresh, typ, indToDo, detClass, detDi
 %   assignTyp - 'maxOverlap' or 'bestScore'
 %   pThresh - what precision thresholds to use
 %   threshSet - what set ot pick the thresholds on
-%   dirNameSuffix - directory in which to store the features
 %   nmsThresh - what threshold to use for non-max suppression (uses the exact iu rather than the funny iu from voc-code)
 %   boxFieldName - what field in the detector output file is the list of boxes
 %   sp_dir - directory which has the superpixels that can be used
@@ -30,7 +28,7 @@ function wrapperComputeFeatures4(imSet, ucmThresh, typ, indToDo, detClass, detDi
       detectionParam.pThresh = pThresh;
       cls = detClass;
       parfor i = 1:length(cls),
-        [ex, dsCat{i}, dsThresh(i), recall(i)] = loadDetector(cls{i}, detDir, threshSet, imSet, detectionParam.pThresh, nmsThresh, boxFieldName);
+        [ex, dsCat{i}, dsThresh(i), recall(i)] = load_detector(cls{i}, detDir, threshSet, imSet, detectionParam.pThresh, nmsThresh, boxFieldName);
       end
       for i = 1:length(cls), for j = 1:length(imlist), ds{j}{i} = dsCat{i}{j}; end, end
       
