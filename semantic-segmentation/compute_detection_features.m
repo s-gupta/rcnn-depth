@@ -15,10 +15,10 @@ function compute_detection_features(imSet, typ, indToDo, detClass, detDir, assig
 %   out_dir - where to store the results of the computation
 
   imlist = getImageSet(imSet);
-	paths = get_paths();
+  paths = get_paths();
 
-	[x, y] = ndgrid([-1 0 1], [-1 0 1]);
-	contextR = [x(:), y(:)]';
+  [x, y] = ndgrid([-1 0 1], [-1 0 1]);
+  contextR = [x(:), y(:)]';
   
   switch typ,
     case 'detection-box',
@@ -35,24 +35,24 @@ function compute_detection_features(imSet, typ, indToDo, detClass, detDir, assig
       detectionParam.fName = @detection_features;
   end
 
-	%parfor i = 1:length(imlist),
+  %parfor i = 1:length(imlist),
   parfor ii = 1:length(indToDo),
     i = indToDo(ii);
     imname = imlist{i};
-		
-		tt = tic();
+    
+    tt = tic();
     % Load the point cloud
     fileName = fullfile_ext(sp_dir, imname, 'mat');
     dt = load(fileName, 'clusters', 'superpixels');
     
     D = getImage(imname, 'depth'); D = double(D)./1000; D = D.*100; Z = D;
 
-		% Compute generic features
+    % Compute generic features
     fprintf('%s - ', imlist{i});
-		detectionData = struct('clusters', dt.clusters, 'superpixels', dt.superpixels, ...
+    detectionData = struct('clusters', dt.clusters, 'superpixels', dt.superpixels, ...
       'ds', {ds{i}}, 'Z', Z, 'thresh', dsThresh);
-		
+    
     % Compute Features also saves the features in the cache directory.
     [f, sp2reg] = compute_ss_features(imlist{i}, out_dir, detectionParam, detectionData);
-	end
+  end
 end

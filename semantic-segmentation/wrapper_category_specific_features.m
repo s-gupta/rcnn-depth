@@ -1,39 +1,39 @@
 function wrapper_category_specific_features(typ, cSet)
-	paths = get_paths();
-	train1 = 'train';
-	train2 = 'val';
+  paths = get_paths();
+  train1 = 'train';
+  train2 = 'val';
 
-	numClass = 40;
-	task = 'entryLevel';
-	classMapping = 'classMapping40';
-	classifierType = 'svm-categorySpecific';
+  numClass = 40;
+  task = 'entryLevel';
+  classMapping = 'classMapping40';
+  classifierType = 'svm-categorySpecific';
 
-	imSet = {train1, train2}; useVal = 0;
-	trainingParam.fileSuffix = sprintf('tr-%s_val-%s_useVal-%d', imSet{1}, imSet{2}, useVal);
+  imSet = {train1, train2}; useVal = 0;
+  trainingParam.fileSuffix = sprintf('tr-%s_val-%s_useVal-%d', imSet{1}, imSet{2}, useVal);
 
-	%% Train the category specific features here
+  %% Train the category specific features here
 
-	featureParam = getAblationParameters(typ);
-	trainingParam.featureParam = featureParam;
+  featureParam = getAblationParameters(typ);
+  trainingParam.featureParam = featureParam;
 
-	gtParam = struct('spFraction', 0.8, 'spArea', 500, 'classMapping', classMapping, 'numClass', numClass);
-	trainingParam.gtParam = gtParam;
+  gtParam = struct('spFraction', 0.8, 'spArea', 500, 'classMapping', classMapping, 'numClass', numClass);
+  trainingParam.gtParam = gtParam;
 
-	classifierParam = getClassifierParam(classifierType, struct('useVal', useVal));
-	trainingParam.classifierParam = classifierParam;
-	trainingParam.classifierFileName = sprintf('%s_%s_%s', classifierType, task, trainingParam.featureParam.featureCacheName);
+  classifierParam = getClassifierParam(classifierType, struct('useVal', useVal));
+  trainingParam.classifierParam = classifierParam;
+  trainingParam.classifierFileName = sprintf('%s_%s_%s', classifierType, task, trainingParam.featureParam.featureCacheName);
 
-	trainingParam.useCache = true;
-
-
-	%% Make the directory for storing the individual category files..
-	mkdir(fullfile(paths.ss_model_dir, trainingParam.featureParam.featureCacheName));
-	for i = numClass:-1:1, %1:numClass,
-		trainCategorySpecificModel(imSet, paths, trainingParam, i);
-	end
+  trainingParam.useCache = true;
 
 
-	%% Collect these SVMs!
+  %% Make the directory for storing the individual category files..
+  mkdir(fullfile(paths.ss_model_dir, trainingParam.featureParam.featureCacheName));
+  for i = numClass:-1:1, %1:numClass,
+    trainCategorySpecificModel(imSet, paths, trainingParam, i);
+  end
+
+
+  %% Collect these SVMs!
   try
     modelFile = fullfile(paths.ss_model_dir, strcat(sprintf('%s', trainingParam.classifierFileName), '.mat')); 
     dt = load(modelFile);
@@ -52,13 +52,13 @@ function wrapper_category_specific_features(typ, cSet)
     dt = load(modelFile);
   end
 
-	%% Generate category specific features, using the collected SVMs
+  %% Generate category specific features, using the collected SVMs
   
-  keyboard;	
-	imList = getImageSet(cSet);
-	mkdir(fullfile(paths.featuresDir, trainingParam.featureParam.featureCacheName))
+  keyboard; 
   imList = getImageSet(cSet);
-	parfor i = 1:length(imList),
-		categorySpecificFeatures(imList{i}, paths, dt.param, dt.models);
-	end
+  mkdir(fullfile(paths.featuresDir, trainingParam.featureParam.featureCacheName))
+  imList = getImageSet(cSet);
+  parfor i = 1:length(imList),
+    categorySpecificFeatures(imList{i}, paths, dt.param, dt.models);
+  end
 end
