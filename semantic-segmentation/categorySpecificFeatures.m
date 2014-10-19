@@ -1,5 +1,6 @@
 function features = categorySpecificFeatures(imName, paths, param, models)
-	[clusters] = getAmodalCompletion(imName);
+	load(fullfile(paths.ss_feature_dir, 'sift', strcat(imName, '.mat')), 'clusters');
+	% [clusters] = getAmodalCompletion(imName);
 	typ = param.featureParam.featureCacheName;
 
 	for i = 1:size(clusters, 2),
@@ -18,6 +19,6 @@ function features = categorySpecificFeatures(imName, paths, param, models)
 		features{i}(:, cId) = f(:, ind);
 	end
 	
-	fileName = fullfile(paths.featuresDir, typ, strcat(imName, '.mat'));
+	fileName = fullfile(paths.ss_feature_dir, typ, strcat(imName, '.mat'));
 	save(fileName, 'clusters', 'superpixels', 'features');
 end
