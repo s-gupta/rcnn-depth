@@ -7,3 +7,9 @@ nyu-hooks/*
 caffe/*
 caffe-data/*
 .git-*
+rgbdutils
+utils
+utils-github/*
+rgbdutils-github/*
+nyu-hooks-github/*
+rgbdutils/*
