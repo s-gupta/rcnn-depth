@@ -1,14 +1,19 @@
 function candidates_new = refine_superpixels(inst, candidates, N)
 % function candidates_new = refine_superpixels(inst, candidates, N)
+
   sp=candidates.superpixels;
   N1=min(N, numel(candidates.labels));
   reg2sp=false(max(sp(:)),N1); % nSP x nR
   for j = 1:N1
     reg2sp(candidates.labels{j},j)=true;
   end
+  old.superpixels = sp;
+  old.sp2reg = reg2sp';
+  old.labels = candidates.labels(1:N1);
   
   % compress to remove irrelevant sps
   [sp, reg2sp] = compressSp2reg(sp, reg2sp);
+
 
   % add ground truth to reg2sp
   num_inst = max(inst(:));
@@ -23,6 +28,7 @@ function candidates_new = refine_superpixels(inst, candidates, N)
   candidates_new.sp2reg = reg2sp';
   candidates_new.sp2reg = candidates_new.sp2reg(num_inst+1:end,:);
   candidates_new.labels = cell(N1,1);
+  candidates_new.old = old; 
   for i = 1:N1,
     candidates_new.labels{i} = uint32(find(candidates_new.sp2reg(i,:)));
   end
