@@ -31,7 +31,6 @@ function startup_mcg()
   % Install own lib
   addpath(mcg_root_dir);
   addpath(fullfile(mcg_root_dir,'lib'));
-  addpath(fullfile(mcg_root_dir,'scripts'));
   addpath(fullfile(mcg_root_dir,'scripts_training'));
   addpath(fullfile(mcg_root_dir,'datasets'));
   addpath(fullfile(mcg_root_dir,'depth_features'));
