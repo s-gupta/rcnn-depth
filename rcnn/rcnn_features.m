@@ -1,5 +1,5 @@
-function feat = rcnn_features(im, boxes, rcnn_model)
-% feat = rcnn_features(im, boxes, rcnn_model)
+function feat = rcnn_features(im, boxes, sp, sp2reg, rcnn_model, region)
+% feat = rcnn_features(im, boxes, sp, sp2reg, rcnn_model, region)
 %   Compute CNN features on a set of boxes.
 %
 %   im is an image in RGB order as returned by imread
@@ -24,7 +24,11 @@ end
 % Each batch contains 256 (default) image regions.
 % Processing more than this many at once takes too much memory
 % for a typical high-end GPU.
-[batches, batch_padding] = rcnn_extract_regions(im, boxes, rcnn_model);
+if(region)
+  [batches, batch_padding] = rcnn_extract_regions(im, boxes, sp, sp2reg, rcnn_model);
+else
+  [batches, batch_padding] = rcnn_extract_regions(im, boxes, rcnn_model);
+end
 batch_size = rcnn_model.cnn.batch_size;
 
 % compute features for each batch of region images

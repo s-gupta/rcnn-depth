@@ -1,5 +1,5 @@
-function [batches, batch_padding] = rcnn_extract_regions_mask(im, sp, reg2sp, boxes, rcnn_model)
-% [batches, batch_padding] = rcnn_extract_regions_mask(im, sp, reg2sp, boxes, rcnn_model)
+function [batches, batch_padding] = rcnn_extract_regions_mask(im, boxes, sp, sp2reg, rcnn_model)
+% [batches, batch_padding] = rcnn_extract_regions_mask(im, boxes, sp, sp2reg, rcnn_model)
 %   Extract image regions and preprocess them for use in Caffe.
 %   Output is a cell array of batches.
 %   Each batch is a 4-D tensor formatted for input into Caffe:

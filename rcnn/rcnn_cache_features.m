@@ -26,6 +26,7 @@ function rcnn_cache_pool5_features(imdb, varargin)
 
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
+ip.addRequired('region', @isscalar);
 ip.addOptional('start', 1, @isscalar);
 ip.addOptional('step', 1, @isscalar);
 ip.addOptional('end', 0, @isscalar);
@@ -91,7 +92,11 @@ for i = opts.start:opts.step:opts.end
   im = imread(fullfile_ext(opts.image_dir, imdb.image_ids{i}, opts.image_ext));
 
   th = tic;
-  d.feat = rcnn_features(im, d.boxes, rcnn_model);
+  if(opts.region)
+    d.feat = rcnn_features(im, d.sp, d.sp2reg, d.boxes, rcnn_model, region);
+  else
+    d.feat = rcnn_features(im, [], [], d.boxes, rcnn_model, region);
+  end
   fprintf(' [features: %.3fs]\n', toc(th));
 
   th = tic;
