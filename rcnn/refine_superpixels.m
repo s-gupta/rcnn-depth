@@ -1,5 +1,8 @@
-function candidates_new = refine_superpixels(inst, candidates, N)
-% function candidates_new = refine_superpixels(inst, candidates, N)
+function candidates_new = refine_superpixels(inst, candidates, N, im_name, in_dir, out_dir)
+% function candidates_new = refine_superpixels(inst, candidates, N, im_name, in_dir, out_dir)
+  
+  if(isempty(inst)), inst = getGroundTruth(im_name, 'instance'); end
+  if(isempty(candidates)), candidates = load(fullfile_ext(in_dir, im_name, 'mat')); end
 
   sp=candidates.superpixels;
   N1=min(N, numel(candidates.labels));
@@ -43,6 +46,7 @@ function candidates_new = refine_superpixels(inst, candidates, N)
     % figure(1); subplot(1,2,2); imagesc(sp2reg1(candidates.superpixels));
     assert(isequal(sp2reg2(candidates_new.superpixels), sp2reg1(candidates.superpixels)), sprintf('%d not good.', i));
   end
+  if(~isempty(out_dir)), save(fullfile_ext(out_dir, im_name, 'mat'), '-STRUCT', 'candidates_new'); end
 end
       
 function [sp, sp2reg] = intersect_partitions(sp1, sp2, sp2reg1, sp2reg2)

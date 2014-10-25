@@ -95,3 +95,17 @@ if strcmp(jobName, 'show_region_results')
   };
   show_region_results(fullfile(p.output_dir, 'regions'), method, legends);
 end
+
+if strcmp(jobName, 'intersect_gt')
+  args = {};
+  imlist = getImageSet('all'); NUM_BOX = 2000;
+  in_dir = fullfile(p.output_dir, 'regions', 'release');
+  out_dir = fullfile(p.output_dir, 'regions', 'release-gt-inst');
+  K = 34;
+  for i = 1:length(imlist),
+    args{end+1} = {[], [], NUM_BOX, imlist{i}, in_dir, out_dir};
+  end
+  jobParam = struct('numThreads', 1, 'codeDir', pwd(), 'preamble', '', 'matlabpoolN', 0, 'globalVars', {{}}, 'fHandle', @refine_superpixels, 'numOutputs', 0);
+  resourceParam = struct('mem', 4, 'hh', 20, 'numJobs', K, 'ppn', 1, 'nodes', 1, 'logDir', '~/psi/work4/sgupta/pbsBatchDir/', 'queue', 'psi', 'notif', false, 'username', 'sgupta', 'headNode', 'zen');
+  [jobId jobDir] = jobParallel(jobName, resourceParam, jobParam, args);
+end 
