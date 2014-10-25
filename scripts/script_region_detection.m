@@ -3,73 +3,37 @@ args = {};
 if strcmp(jobName, 'region_write_window_file')
   p = get_paths(); c = benchmarkPaths();
   NYU_ROOT_DIR = c.dataDir; REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
-  SALT = 'release-regions';
+  SALT = 'region';
   MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
   
-  trainset = 'test';
-  imdb = imdb_from_nyud2(c.dataDir, trainset, task, REGIONDIR, SALT, MAX_BOXES);
-  imdb.roidb_func = @roidb_from_nyud2_region;
-  roidb = imdb.roidb_func(imdb);
   spdir = fullfile(p.detection_dir,  'sp');
   sp2regdir = fullfile(p.detection_dir,  'sp2reg')
-  write_superpixels_sp2reg(imdb, roidb, spdir, sp2regdir);
-  
-  imdirs = {}; imexts = {'png', 'png', 'png'};
-  imlist = imdb.image_ids; channels = 3;
-  list = {p.ft_hha_dir, sp2regdir, spdir};
-  for j = 1:num_boxes
-    [ov, label] = max(roi.overlap(j,:));
-    % zero overlap => label = 0 (background)
-    if ov < 1e-5
-      label = 0;
-      ov = 0;
+  imexts = {'png', 'png', 'png'};
+  imsets = {'train', 'val'}; 
+
+  channels = 3;
+  for i = 2,
+    imset = imsets{i}; 
+    imdb = imdb_from_nyud2(c.dataDir, imset, task, REGIONDIR, SALT, MAX_BOXES);
+    imdb.roidb_func = @roidb_from_nyud2_region;
+    roidb = imdb.roidb_func(imdb);
+    % write_superpixels_sp2reg(imdb, roidb, spdir, sp2regdir);
+    list = {}; 
+    for i = 1:length(roidb.rois),
+      roi = roidb.rois(i); [ov, label] = max(roi.overlap, [], 2);
+      ov(ov < 1e-5) = 0; label(ov < 1e-5) = 0; list{i} = cat(2, label, ov, roi.boxes-1);
     end
-    bbox = roi.boxes(j,:)-1;
-    fprintf(fid, '%d %.3f %d %d %d %d\n', ...
-        label, ov, bbox(1), bbox(2), bbox(3), bbox(4));
+    
+    imlist = imdb.image_ids;
+    imdirs = {p.ft_hha_dir, spdir, sp2regdir};
+    window_file = fullfile(p.detection_dir, 'finetuning', 'v1', 'wf', sprintf('ft_hha_%s', imset)); 
+    write_window_file(imdirs, imexts, imlist, channels, list, window_file);
+
+    imdirs = {p.ft_image_dir, spdir, sp2regdir};
+    window_file = fullfile(p.detection_dir, 'finetuning', 'v1', 'wf', sprintf('ft_rgb_%s', imset)); 
+    write_window_file(imdirs, imexts, imlist, channels, list, window_file);
   end
-
-  write_window_file(imdirs, imexts, imlist, channels, list, window_file)
-  
-  window_file_train_color = rcnn_make_window_file(imdb, fullfile(p.wf_dir), 'color', p.ft_image_dir, 'png');
-  window_file_train_hha = rcnn_make_window_file(imdb, fullfile(p.wf_dir), 'hha', p.ft_hha_dir, 'png');
-
-  keyboard;
-
-  trainset = 'val';
-  imdb = imdb_from_nyud2(NYU_ROOT_DIR, trainset, task, REGIONDIR, SALT, MAX_BOXES);
-  imdb.roidb_func = @roidb_from_nyud2;
-  window_file_val_color = rcnn_make_window_file(imdb, fullfile(p.wf_dir), 'color', p.ft_image_dir, 'png');
-  window_file_val_hha = rcnn_make_window_file(imdb, fullfile(p.wf_dir), 'hha', p.ft_hha_dir, 'png');
-  window_file_val_disparity = rcnn_make_window_file(imdb, fullfile(p.wf_dir), 'disparity', p.ft_disparity_dir, 'png');
-  
-  file_name = {'nyud2_finetune_solver.color', 'nyud2_finetune_solver.hha', 'nyud2_finetune_solver.disparity', ...
-  'nyud2_finetune_train.color', 'nyud2_finetune_train.hha', 'nyud2_finetune_train.disparity', ...
-  'nyud2_finetune_val.color', 'nyud2_finetune_val.hha', 'nyud2_finetune_val.disparity', ...
-  'imagenet_deploy.prototxt'};
-
-  args = {'PROTODIR', p.proto_dir, ...
-    'WINDOW_FILE_TRAIN_COLOR', window_file_train_color, ...
-    'WINDOW_FILE_TRAIN_HHA', window_file_train_hha, ...
-    'WINDOW_FILE_TRAIN_DISPARITY', window_file_train_disparity, ...
-    'WINDOW_FILE_VAL_COLOR', window_file_val_color, ... 
-    'WINDOW_FILE_VAL_HHA', window_file_val_hha, ...
-    'WINDOW_FILE_VAL_DISPARITY', window_file_val_disparity, ...
-    'MEAN_FILE_COLOR', fullfile_ext(p.mean_file_color, 'proto'), ...
-    'MEAN_FILE_HHA', fullfile_ext(p.mean_file_hha, 'proto'), ...
-    'MEAN_FILE_DISPARITY', fullfile_ext(p.mean_file_disparity, 'proto'), ...
-    'N_CLASSES', sprintf('%d', imdb.num_classes+1), ...
-    'SNAPSHOTDIR', p.snapshot_dir,...
-  };
-  make_protofiles(p.proto_dir, file_name, args);
-
-  % Generate the caffe command
-  fprintf('GLOG_logstdtoerr=1 caffe/build/tools/caffe.bin train -gpu 0 -iterations 30000 -solver %s -weights %s -model %s/imagenet_deploy.prototxt 2>&1 | tee %s\n\n\n', fullfile(p.proto_dir, 'nyud2_finetune_solver.color'), p.caffe_net, p.proto_dir, fullfile(p.proto_dir, 'color.log'));
-  fprintf('GLOG_logstdtoerr=1 caffe/build/tools/caffe.bin train -gpu 0 -iterations 30000 -solver %s -weights %s -model %s/imagenet_deploy.prototxt 2>&1 | tee %s\n\n\n', fullfile(p.proto_dir, 'nyud2_finetune_solver.hha'), p.caffe_net, p.proto_dir, fullfile(p.proto_dir, 'hha.log'));
-
-  % Control experiment for finetuning on the disparity only..
-  % fprintf('GLOG_logstdtoerr=1 caffe/build/tools/caffe.bin train -gpu 1 -iterations 30000 -solver %s -weights %s -model %s/imagenet_deploy.prototxt 2>&1 | tee %s\n\n\n', fullfile(p.proto_dir, 'nyud2_finetune_solver.disparity'), p.caffe_net, p.proto_dir, fullfile(p.proto_dir, 'disparity.log'));
 end
 
 if strcmp(jobName, 'vis_regions')
@@ -100,3 +64,115 @@ if strcmp(jobName, 'vis_regions')
   end
 end
 
+if strcmp(jobName, 'check_boxes'),
+  imset = 'train';
+  imlist = getImageSet(imset);
+  pt = load(['cache/release/detection/finetuning/v1/wf/ft_hha_' imset '.mat']);
+  for i = 1:length(imlist),
+    dt = load(fullfile_ext('cache/release/detection/feat_cache/hha_30000/nyud2_release/', imlist{i}, 'mat'), 'boxes');
+    assert(isequal(dt.boxes, single(pt.list{i}(:, 3:6))+1));
+  end
+end
+
+if strcmp(jobName, 'hha_cache_region_features')
+  p = get_paths(); c = benchmarkPaths();
+  NYU_ROOT_DIR = c.dataDir;
+  REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
+  SALT = 'release'; MAX_BOXES = 2000;
+  task = 'task-detection-with-cabinet';
+
+  % imset = 'train';
+  imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+  imdb.roidb_func = @roidb_from_nyud2_region;
+    
+  image_dir = fullfile(p.ft_hha_dir); hha_or_rgb = 'hha'; 
+  
+  image_ext = 'png'; snapshot = 30000;
+  net_file = fullfile_ext(p.snapshot_dir, sprintf('nyud2_finetune_region_%s_iter_%d', hha_or_rgb, snapshot), 'caffemodel');
+  feat_cache_dir = p.cnnF_cache_dir;
+  net_def_file = fullfile('nyud2_finetuning', 'imagenet_hha_256_fc6.prototxt');
+  mean_file = fullfile_ext(p.mean_file_hha, 'mat');
+  cache_name = sprintf('hha_region_%d', snapshot);
+  args = {};
+  % st = 1; sp = 1; e = 0; gpu_id = 1;
+  args{1} = {'start', st, 'step', sp, 'end', e, ...
+    'image_dir', image_dir, 'image_ext', image_ext, ...
+    'feat_cache_dir', feat_cache_dir, ...
+    'net_def_file', net_def_file, 'net_file', net_file, 'mean_file', mean_file, ...
+    'cache_name', cache_name, 'gpu_id', gpu_id};
+  rcnn_cache_features(imdb, true, args{1}{:});
+end
+
+if strcmp(jobName, 'rgb_cache_region_features')
+  p = get_paths(); c = benchmarkPaths();
+  NYU_ROOT_DIR = c.dataDir;
+  REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
+  SALT = 'release'; MAX_BOXES = 2000;
+  task = 'task-detection-with-cabinet';
+
+  % imset = 'train';
+  imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+  imdb.roidb_func = @roidb_from_nyud2_region;
+    
+  image_dir = fullfile(p.ft_image_dir); hha_or_rgb = 'rgb'; 
+  
+  image_ext = 'png'; snapshot = 30000;
+  net_file = fullfile_ext(p.snapshot_dir, sprintf('nyud2_finetune_region_%s_iter_%d', hha_or_rgb, snapshot), 'caffemodel');
+  feat_cache_dir = p.cnnF_cache_dir;
+  net_def_file = fullfile('nyud2_finetuning', 'imagenet_color_256_fc6.prototxt');
+  mean_file = fullfile_ext(p.mean_file_color, 'mat');
+  cache_name = sprintf('rgb_region_%d', snapshot);
+  args = {};
+  % st = 1; sp = 1; e = 0; gpu_id = 1;
+  args{1} = {'start', st, 'step', sp, 'end', e, ...
+    'image_dir', image_dir, 'image_ext', image_ext, ...
+    'feat_cache_dir', feat_cache_dir, ...
+    'net_def_file', net_def_file, 'net_file', net_file, 'mean_file', mean_file, ...
+    'cache_name', cache_name, 'gpu_id', gpu_id};
+  rcnn_cache_features(imdb, true, args{1}{:});
+end
+
+if strcmp(jobName, 'fe'),
+  p = get_paths(); c = benchmarkPaths();
+  NYU_ROOT_DIR = c.dataDir;
+  REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
+  SALT = 'release'; MAX_BOXES = 2000;
+  task = 'task-detection-with-cabinet';
+
+  imset = 'img_5003';
+  imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+  imdb.roidb_func = @roidb_from_nyud2_region;
+
+  h5_file = 'cache/release/detection/feat_cache/rgb_region_30000/train.h5';
+  window_file = 'cache/release/detection/finetuning/v1/wf/ft_rgb_train.mat';
+  output_dir = 'cache/release/detection/feat_cache/rgb_region_30000/extract_features/';
+  h5_to_mat(h5_file, imdb, window_file, output_dir);
+    
+end
+
+% Check the extracted data..
+if strcmp(jobName, 'feat_norm_diff')
+  dbstop in rcnn_features at 32
+  imset = 'img_5003';
+  st = 1; sp = 1; e = 0; gpu_id = 0; jobName = 'rgb_cache_region_features'; script_region_detection
+  a = read_h5_file('cache/release/detection/feat_cache/rgb_region_30000/data.h5', 'data-[0-9]*');
+
+  batches{1} = batches{1}(:,:,:,1:128);
+  for i = 1:128, 
+    im1 = uint8(permute(a{1}(:,:,1:3,i)+128, [2 1 3]));
+    im2 = uint8(permute(batches{1}(:,:,1:3,i)+128, [2 1 3]));
+    figure(1); 
+    subplot(1,3,1); imagesc(im1); subplot(1,3,2); imagesc(im2);
+    subplot(1,3,3); imagesc(sqrt(sum((im1-im2).^2, 3))); colormap jet; colorbar; title(norm(double(im1(:))-double(im2(:)))./norm(double(im1(:))));
+    pause; 
+  end
+
+  b1 = cat(4, batches{1}, batches{1}); f1 = caffe('forward', {b1}); 
+  b2 = cat(4, a{1}, a{1}); f2 = caffe('forward', {b2}); 
+  f1 = f1{1}(:); f2 = f2{1}(:);
+  norm(f1-f2)./norm(f2);
+end
+
+if strcmp(jobName, 'box_train')
+  res = rcnn_all('task-detection', 'hha', 1, 'train', 'val');
+end

@@ -1,4 +1,4 @@
-function res = rcnn_all(task, model_typ, trainset, testset)
+function res = rcnn_all(task, model_typ, region, trainset, testset)
   global RUNNAME
   RUNNAME = 'release';
   p = get_paths(RUNNAME);
@@ -19,15 +19,32 @@ function res = rcnn_all(task, model_typ, trainset, testset)
       conf_override.sub_dir = sprintf('rgb_hha_%d_%s', 30000, trainset);
       feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'rgb_30000', imdb.dataset_name));
       feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'hha_30000', imdb.dataset_name));
+      if(region)
+        conf_override.sub_dir = sprintf('rgb_hha_%d_%s_region_features', 30000, trainset);
+        feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'rgb_region_30000', imdb.dataset_name));
+        feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'hha_region_30000', imdb.dataset_name));
+      end
     case 'rgb',
       conf_override.sub_dir = sprintf('rgb_%d_%s', 30000, trainset);
       feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'rgb_30000', imdb.dataset_name));
+      if region
+        conf_override.sub_dir = sprintf('rgb_%d_%s_region_features', 30000, trainset);
+        feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'rgb_region_30000', imdb.dataset_name));
+      end
     case 'hha',
       conf_override.sub_dir = sprintf('hha_%d_%s', 30000, trainset);
       feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'hha_30000', imdb.dataset_name));
+      if region
+        conf_override.sub_dir = sprintf('hha_%d_%s_region', 30000, trainset);
+        feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'hha_region_30000', imdb.dataset_name));
+      end
     case 'disparity',
       conf_override.sub_dir = sprintf('disparity_%d_%s', 30000, trainset);
       feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'disparity_30000', imdb.dataset_name));
+      if region,
+        conf_override.sub_dir = sprintf('disparity_%d_%s_region', 30000, trainset);
+        feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'disparity_region_30000', imdb.dataset_name));
+      end
   end
   RCNN_CONFIG_OVERRIDE = @() conf_override;
   rcnn_train_opts = {'feat_opts', feat_opts};
