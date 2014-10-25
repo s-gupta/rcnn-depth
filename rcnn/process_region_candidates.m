@@ -1,4 +1,4 @@
-function [region_meta_info]=preprocess_mcg_candidates(imnames, mcgdir, gtdir, ovoutdir, sptextdir, regspimgdir, N)
+function [region_meta_info] = preprocess_mcg_candidates(imnames, mcgdir, gtdir, ovoutdir, sptextdir, regspimgdir, N)
 if(~exist(ovoutdir, 'file'))
   mkdir(ovoutdir); 
 end

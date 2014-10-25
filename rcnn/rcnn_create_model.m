@@ -39,8 +39,8 @@ end
 %    class_to_index: map from class name to column index in W
 
 % init empty convnet
-assert(exist(cnn_binary_file, 'file') ~= 0);
-assert(exist(cnn_definition_file, 'file') ~= 0);
+assert(exist(cnn_binary_file, 'file') ~= 0, sprintf('cannot find cnn_binary_file: %s', cnn_binary_file));
+assert(exist(cnn_definition_file, 'file') ~= 0, sprintf('cannot find cnn_binary_file: %s', cnn_binary_file));
 cnn.binary_file = cnn_binary_file;
 cnn.definition_file = cnn_definition_file;
 cnn.batch_size = 256;

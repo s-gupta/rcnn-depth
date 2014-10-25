@@ -42,7 +42,7 @@ parfor batch = 1:num_batches
   ims = zeros(crop_size, crop_size, 3, batch_size, 'single');
   for j = batch_start:batch_end
     bbox = boxes(j,:);
-    sp2regI = sp2regI(j,:);
+    sp2regI = sp2reg(j,:);
     mask = sp2regI(sp);
     crop = rcnn_im_crop_mask(im, bbox, mask, crop_mode, crop_size, ...
         crop_padding, image_mean);

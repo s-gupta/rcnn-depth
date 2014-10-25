@@ -25,7 +25,7 @@ end
 % Processing more than this many at once takes too much memory
 % for a typical high-end GPU.
 if(region)
-  [batches, batch_padding] = rcnn_extract_regions(im, boxes, sp, sp2reg, rcnn_model);
+  [batches, batch_padding] = rcnn_extract_regions_mask(im, boxes, sp, sp2reg, rcnn_model);
 else
   [batches, batch_padding] = rcnn_extract_regions(im, boxes, rcnn_model);
 end

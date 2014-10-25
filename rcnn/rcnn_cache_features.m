@@ -1,4 +1,4 @@
-function rcnn_cache_pool5_features(imdb, varargin)
+function rcnn_cache_pool5_features(imdb, region, varargin)
 % rcnn_cache_pool5_features(imdb, varargin)
 %   Computes pool5 features and saves them to disk. We compute
 %   pool5 features because we can easily compute fc6 and fc7
@@ -43,7 +43,7 @@ ip.addOptional('net_def_file', '', @isstr);
 ip.addOptional('layer', 'fc6', @isstr);
 ip.addOptional('gpu_id', 0, @isscalar);
 
-ip.parse(imdb, varargin{:});
+ip.parse(imdb, region, varargin{:});
 opts = ip.Results;
 
 image_ids = imdb.image_ids;
@@ -93,13 +93,14 @@ for i = opts.start:opts.step:opts.end
 
   th = tic;
   if(opts.region)
-    d.feat = rcnn_features(im, d.sp, d.sp2reg, d.boxes, rcnn_model, region);
+    d.feat = rcnn_features(im, d.boxes, d.sp, d.sp2reg, rcnn_model, region);
   else
-    d.feat = rcnn_features(im, [], [], d.boxes, rcnn_model, region);
+    d.feat = rcnn_features(im, d.boxes, [], [], rcnn_model, region);
   end
   fprintf(' [features: %.3fs]\n', toc(th));
 
   th = tic;
+  save_file
   save(save_file, '-struct', 'd');
   fprintf(' [saving:   %.3fs]\n', toc(th));
 
