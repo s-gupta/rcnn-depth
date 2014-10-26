@@ -192,3 +192,14 @@ if strcmp(jobName, 'region_train')
   % use the box trained network to generate
 
 end
+
+
+if strcmp(jobName, 'compute_overlap')
+  imlist = getImageSet('all');
+  regiondir = 'cache/release/output/regions/release-gt-inst/';
+  for i = 1:length(imlist),
+    dt = load(fullfile_ext(regiondir, imlist{i}, 'mat'), 'bboxes', 'superpixels', 'sp2reg');
+    [iu, inter, reg_area_1, reg_area_2] = compute_region_overlap(dt.superpixels, dt.sp2reg, dt.sp2reg);
+    iu = sparse(double(iu)); save(fullfile_ext(regiondir, [imlist{i} '_iu'], 'mat'), '-append', 'iu');
+  end
+end

@@ -22,6 +22,6 @@ end
 
 if toc(th) > 1
   fprintf(fmt, varargin{:});
-  drawnow;
+  % drawnow;
   th = tic();
 end
