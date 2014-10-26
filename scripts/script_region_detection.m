@@ -190,8 +190,11 @@ if strcmp(jobName, 'region_vis')
   imdb.roidb_func = @roidb_from_nyud2_region;
   roidb = imdb.roidb_func(imdb);
   box_dir = 'cache/release/detection/detector/rgb_hha_30000_train_region-features-1_region-task-1/detections/'; 
+  out_dir = 'cache/release/detection/detector/rgb_hha_30000_train_region-features-1_region-task-1/vis/';
   cls = 'chair';
-  vis_region_detect(cls, box_dir, imdb, roidb);
+  for i = 1:19,
+    vis_region_detect(imdb.classes{i}, box_dir, imdb, roidb, 0, 1, out_dir);
+  end
 
 end
 
