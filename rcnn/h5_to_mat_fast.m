@@ -1,13 +1,13 @@
 function h5_to_mat(h5_file, imdb, window_file, output_dir)
   pt = load(window_file);
-  roidb = imdb.roidb_func(imdb);
  
   fid = H5F.open(h5_file);
   
   a_counter = 0;
   dset_id = H5D.open(fid, sprintf('/data-%06d', a_counter)); a = H5D.read(dset_id); H5D.close(dset_id);
   rem = size(a, 4);
-  for i = 1:length(roidb.rois),
+  for i = 1:length(imdb.image_ids),
+    roidb = imdb.roidb_func(imdb, i);
     d = roidb.rois(i);
     assert(isequal(pt.imlist{i}, imdb.image_ids{i}));
     assert(isequal(single(pt.list{i}(:,3:6)+1), d.boxes));
@@ -18,9 +18,9 @@ function h5_to_mat(h5_file, imdb, window_file, output_dir)
       % a_new = read_h5_file(h5_file, sprintf('data-%06d', a_counter)); a_new = a_new{1};
       a = cat(4, a, a_new);
       rem = size(a,4);
-      fprintf('%d (%d), ', rem, a_counter);
+      % fprintf('%d (%d), ', rem, a_counter);
     end
-    fprintf('\n');
+    % fprintf('\n');
     f = a(:,:,:,[1:size(d.boxes,1)]);
     a = a(:,:,:, size(d.boxes,1)+1:end);
     rem = size(a,4);
