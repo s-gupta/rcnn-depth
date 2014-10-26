@@ -178,18 +178,20 @@ if strcmp(jobName, 'box_train')
   res = rcnn_all('task-detection', 'hha', 1, 'train', 'val');
 end
 
-if strcmp(jobName, 'region_train')
+if strcmp(jobName, 'region_vis')
   p = get_paths(); c = benchmarkPaths();
   NYU_ROOT_DIR = c.dataDir;
   REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
   SALT = 'release'; MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
-  imset = 'train';
+  imset = 'val';
   
   imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
   imdb.roidb_func = @roidb_from_nyud2_region;
-  
-  % use the box trained network to generate
+  roidb = imdb.roidb_func(imdb);
+  box_dir = 'cache/release/detection/detector/rgb_hha_30000_train_region-features-1_region-task-1/detections/'; 
+  cls = 'chair';
+  vis_region_detect(cls, box_dir, imdb, roidb);
 
 end
 
