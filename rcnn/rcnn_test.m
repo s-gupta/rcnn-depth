@@ -1,4 +1,4 @@
-function res = rcnn_test(rcnn_model, imdb, suffix)
+function res = rcnn_test(rcnn_model, imdb, suffix, box_or_region)
 % res = rcnn_test(rcnn_model, imdb, suffix)
 %   Compute test results using the trained rcnn_model on the
 %   image database specified by imdb. Results are saved
@@ -22,8 +22,9 @@ feat_opts = rcnn_model.feat_opts;
 training_opts = rcnn_model.training_opts;
 num_classes = length(rcnn_model.classes);
 
+pr_curves_dir_name = sprintf('pr-curves-%s', box_or_region); 
 exists_or_mkdir(fullfile(conf.cache_dir, 'detections'));
-exists_or_mkdir(fullfile(conf.cache_dir, 'pr-curves'));
+exists_or_mkdir(fullfile(conf.cache_dir, pr_curves_dir_name));
 
 try
   aboxes = cell(num_classes, 1);
@@ -91,13 +92,13 @@ for model_ind = 1:num_classes
 
   % Generate and save the precision recall curve
   print(res(model_ind).plotHandle, '-djpeg', '-r0', ...
-      fullfile(conf.cache_dir, 'pr-curves', [cls '_pr_' imdb.name suffix '.jpg']));
+      fullfile(conf.cache_dir, pr_curves_dir_name, [cls '_pr_' imdb.name suffix '.jpg']));
 
-  save(fullfile_ext(conf.cache_dir, 'pr-curves', [cls '_pr_' imdb.name suffix], 'mat'), ...
+  save(fullfile_ext(conf.cache_dir, pr_curves_dir_name, [cls '_pr_' imdb.name suffix], 'mat'), ...
     '-STRUCT', 'resI');
 end
 
-save(fullfile_ext(conf.cache_dir, 'pr-curves', ['results_' imdb.name suffix], 'mat'), 'res', 'imdb');
+save(fullfile_ext(conf.cache_dir, pr_curves_dir_name, ['results_' imdb.name suffix], 'mat'), 'res', 'imdb');
 
 fprintf('\n~~~~~~~~~~~~~~~~~~~~\n');
 fprintf('Results:\n');
