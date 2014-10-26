@@ -10,10 +10,10 @@ if strcmp(jobName, 'region_write_window_file')
   spdir = fullfile(p.detection_dir,  'sp');
   sp2regdir = fullfile(p.detection_dir,  'sp2reg')
   imexts = {'png', 'png', 'png'};
-  imsets = {'train', 'val'}; 
+  imsets = {'train', 'val', 'test'}; 
 
   channels = 3;
-  for i = 2,
+  for i = 3,
     imset = imsets{i}; 
     imdb = imdb_from_nyud2(c.dataDir, imset, task, REGIONDIR, SALT, MAX_BOXES);
     imdb.roidb_func = @roidb_from_nyud2_region;
@@ -81,7 +81,7 @@ if strcmp(jobName, 'hha_cache_region_features')
   SALT = 'release'; MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
 
-  % imset = 'train';
+  imset = 'test';
   imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
   imdb.roidb_func = @roidb_from_nyud2_region;
     
@@ -138,8 +138,8 @@ if strcmp(jobName, 'fe'),
   REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
   SALT = 'release'; MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
-  imsets = {'val', 'train'};
-  for i = 1,
+  imsets = {'val', 'train', 'test'};
+  for i = 3,
     imset = imsets{i};
     imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
     imdb.roidb_func = @roidb_from_nyud2_region;
@@ -188,6 +188,7 @@ if strcmp(jobName, 'region_train')
   
   imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
   imdb.roidb_func = @roidb_from_nyud2_region;
-
+  
+  % use the box trained network to generate
 
 end
