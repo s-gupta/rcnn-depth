@@ -138,16 +138,17 @@ if strcmp(jobName, 'fe'),
   REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
   SALT = 'release'; MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
+  imsets = {'val', 'train'};
+  for i = 1,
+    imset = imsets{i};
+    imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+    imdb.roidb_func = @roidb_from_nyud2_region;
 
-  imset = 'img_5003';
-  imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
-  imdb.roidb_func = @roidb_from_nyud2_region;
-
-  h5_file = 'cache/release/detection/feat_cache/rgb_region_30000/train.h5';
-  window_file = 'cache/release/detection/finetuning/v1/wf/ft_rgb_train.mat';
-  output_dir = 'cache/release/detection/feat_cache/rgb_region_30000/extract_features/';
-  h5_to_mat(h5_file, imdb, window_file, output_dir);
-    
+    h5_file = sprintf('cache/release/detection/feat_cache/rgb_region_30000/%s.h5', imset);
+    window_file = sprintf('cache/release/detection/finetuning/v1/wf/ft_rgb_%s.mat', imset);
+    output_dir = 'cache/release/detection/feat_cache/rgb_region_30000/extract_features_fast/';
+    h5_to_mat_fast(h5_file, imdb, window_file, output_dir);
+  end 
 end
 
 % Check the extracted data..
@@ -175,4 +176,18 @@ end
 
 if strcmp(jobName, 'box_train')
   res = rcnn_all('task-detection', 'hha', 1, 'train', 'val');
+end
+
+if strcmp(jobName, 'region_train')
+  p = get_paths(); c = benchmarkPaths();
+  NYU_ROOT_DIR = c.dataDir;
+  REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
+  SALT = 'release'; MAX_BOXES = 2000;
+  task = 'task-detection-with-cabinet';
+  imset = 'train';
+  
+  imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+  imdb.roidb_func = @roidb_from_nyud2_region;
+
+
 end
