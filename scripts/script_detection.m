@@ -1,3 +1,24 @@
+if strcmp(jobName, 'benchmark_boxes')
+  p = get_paths(); c = benchmarkPaths();
+  NYU_ROOT_DIR = c.dataDir;
+  REGIONDIR = fullfile(p.output_dir, 'regions', 'release');
+  SALT = 'release'; MAX_BOXES = 2000;
+  task = 'task-detection-with-cabinet';
+  testset = 'test';
+  imdb = imdb_from_nyud2(c.dataDir, testset, task, REGIONDIR, SALT, MAX_BOXES);
+  imdb.roidb_func = @roidb_from_nyud2;
+  roidb = imdb.roidb_func(imdb);
+  [ov_cls, num_boxes] = benchmark_boxes(imdb, roidb, K, nms_thresh);
+ 
+  figure(1); clf; hold on;
+  for i = 1:length(imdb.classes),
+    subplot(4,5,i); hold on;
+  end
+  [ov_cls, num_boxes] = benchmark_boxes(imdb, roidb, [5 10 25 50 75 100 150 200 250 300 400 500:100:2000], 1.0, 'r.-'); drawnow();
+  [ov_cls, num_boxes] = benchmark_boxes(imdb, roidb, [5 10 25 50 75 100 150 200 250 300 400 500:100:2000], 0.95, 'b.-'); drawnow();
+  [ov_cls, num_boxes] = benchmark_boxes(imdb, roidb, [5 10 25 50 75 100 150 200 250 300 400 500:100:2000], 0.90, 'k.-'); drawnow();
+end
+
 if strcmp(jobName, 'save_disparity')
   p = get_paths();
   C = cropCamera(getCameraParam('color'));
