@@ -8,15 +8,16 @@ if strcmp(jobName, 'region_write_window_file')
   task = 'task-detection-with-cabinet';
   
   spdir = fullfile(p.detection_dir,  'sp');
-  sp2regdir = fullfile(p.detection_dir,  'sp2reg')
+  sp2regdir = fullfile(p.detection_dir,  'sp2reg');
   imexts = {'png', 'png', 'png'};
-  imsets = {'train', 'val', 'test'}; 
+  imsets = {'trainval', 'test'}; 
 
   channels = 3;
-  for i = 3,
+  for i = 1:2,
     imset = imsets{i}; 
     imdb = imdb_from_nyud2(c.dataDir, imset, task, REGIONDIR, SALT, MAX_BOXES);
-    imdb.roidb_func = @roidb_from_nyud2_region;
+    % imdb.roidb_func = @roidb_from_nyud2_region;
+    imdb.roidb_func = @roidb_from_nyud2;
     roidb = imdb.roidb_func(imdb);
     % write_superpixels_sp2reg(imdb, roidb, spdir, sp2regdir);
     list = {}; 
@@ -27,14 +28,38 @@ if strcmp(jobName, 'region_write_window_file')
     
     imlist = imdb.image_ids;
     imdirs = {p.ft_hha_dir, spdir, sp2regdir};
-    window_file = fullfile(p.detection_dir, 'finetuning', 'v1', 'wf', sprintf('ft_hha_%s', imset)); 
+    window_file = fullfile(p.detection_dir, 'finetuning', 'v3', 'wf', sprintf('ft_box_hha_%s', imset)); 
     write_window_file(imdirs, imexts, imlist, channels, list, window_file);
 
     imdirs = {p.ft_image_dir, spdir, sp2regdir};
-    window_file = fullfile(p.detection_dir, 'finetuning', 'v1', 'wf', sprintf('ft_rgb_%s', imset)); 
+    window_file = fullfile(p.detection_dir, 'finetuning', 'v3', 'wf', sprintf('ft_box_rgb_%s', imset)); 
     write_window_file(imdirs, imexts, imlist, channels, list, window_file);
   end
 end
+
+%   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/caffe.bin train \
+%   -gpu 1 \
+%   -model ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_box.hha \
+%   -solver ../eccv14-cachedir/release/detection/finetuning/v3/proto/solver_box.hha 2>&1 \
+%   -weights caffe-data/caffe_reference_imagenet_model \
+%   | tee ../eccv14-cachedir/release/detection/finetuning/v3/log_box.hha
+% 
+%   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/caffe.bin train \
+%   -gpu 0 \
+%   -model ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_box.rgb \
+%   -solver ../eccv14-cachedir/release/detection/finetuning/v3/proto/solver_box.rgb 2>&1 \
+%   -weights caffe-data/caffe_reference_imagenet_model \
+%   | tee ../eccv14-cachedir/release/detection/finetuning/v3/log_box.rgb
+%  
+%   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/extract_features \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/snapshot/rgb_iter_30000.caffemodel \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_region.rgb \
+%   hdf5 fc6 \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/features/fc6_30000_region.rgb \
+%   13000 GPU 0 \
+%   | tee ../eccv14-cachedir/release/detection/finetuning/v3/fe_log_region.rgb
+
+
 
 if strcmp(jobName, 'vis_regions')
   p = get_paths(); c = benchmarkPaths();
