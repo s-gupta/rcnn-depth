@@ -1,11 +1,13 @@
-function res = rcnn_all(task, model_typ, region_features, region_task, trainset, testset)
-  global RUNNAME
-  RUNNAME = 'release';
-  p = get_paths(RUNNAME);
+function res = rcnn_all(task, model_typ, region_features, region_task, trainset, testset, imdb_salt, salt, varargin)
+  % global RUNNAME
+  % RUNNAME = 'release';
+  % p = get_paths(RUNNAME);
+
+  p = get_paths();
   c = benchmarkPaths();
   NYU_ROOT_DIR = c.dataDir;
   REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
-  SALT = 'release';
+  SALT = imdb_salt;
   MAX_BOXES = 2000;
 
   imdb = imdb_from_nyud2(NYU_ROOT_DIR, trainset, task, REGIONDIR, SALT, MAX_BOXES);
@@ -52,14 +54,15 @@ function res = rcnn_all(task, model_typ, region_features, region_task, trainset,
         feat_opts(end+1) = struct('featDir', fullfile(p.cnnF_cache_dir, 'disparity_region_30000', imdb.dataset_name));
       end
   end
-  conf_override.sub_dir = sprintf('%s_region-features-%d_region-task-%d', conf_override.sub_dir, region_features, region_task);
+  conf_override.sub_dir = sprintf('%s_region-features-%d_region-task-%d%s', ...
+    conf_override.sub_dir, region_features, region_task, salt);
 
   if(region_task),
     n = length(feat_opts)/2; feat_opts = feat_opts([(n+1):end, 1:n]); end
 
   RCNN_CONFIG_OVERRIDE = @() conf_override;
   rcnn_train_opts = {'feat_opts', feat_opts};
-  rcnn_models = rcnn_train(imdb, rcnn_train_opts{:});
+  rcnn_models = rcnn_train(imdb, rcnn_train_opts{:}, varargin{:});
   
   if(isstr(testset)), testset = {testset}; end
   for i = 1:length(testset),

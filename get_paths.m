@@ -22,6 +22,7 @@ function p = get_paths(runname)
   p.detection_dir = fullfile(p.cache_dir, 'detection');
   p.cnnF_cache_dir = fullfile(p.detection_dir, 'feat_cache');
     p.ft_image_dir = fullfile(p.detection_dir, 'ft_images');
+    p.ft_rgb_dir = p.ft_image_dir;
     p.ft_hha_dir = fullfile(p.detection_dir, 'ft_hha');
     p.ft_disparity_dir = fullfile(p.detection_dir, 'ft_disparity');
     p.ft_dir = fullfile(p.detection_dir, 'finetuning');
@@ -33,6 +34,7 @@ function p = get_paths(runname)
   for i = 1:length(f), exists_or_mkdir(p.(f{i})); end
   
   p.mean_file_color = fullfile('caffe-data', 'mean', 'imagenet_mean');
+  p.mean_file_rgb = p.mean_file_color;
   p.mean_file_disparity = fullfile('caffe-data', 'mean', 'nyu_disparity_train1');
   p.mean_file_hha = fullfile('caffe-data', 'mean', 'nyu_hha_train1');
   p.caffe_net = fullfile('caffe-data', 'caffe_reference_imagenet_model');

@@ -40,24 +40,33 @@ end
 %   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/caffe.bin train \
 %   -gpu 1 \
 %   -model ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_box.hha \
-%   -solver ../eccv14-cachedir/release/detection/finetuning/v3/proto/solver_box.hha 2>&1 \
 %   -weights caffe-data/caffe_reference_imagenet_model \
+%   -solver ../eccv14-cachedir/release/detection/finetuning/v3/proto/solver_box.hha 2>&1 \
 %   | tee ../eccv14-cachedir/release/detection/finetuning/v3/log_box.hha
 % 
 %   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/caffe.bin train \
 %   -gpu 0 \
 %   -model ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_box.rgb \
-%   -solver ../eccv14-cachedir/release/detection/finetuning/v3/proto/solver_box.rgb 2>&1 \
 %   -weights caffe-data/caffe_reference_imagenet_model \
+%   -solver ../eccv14-cachedir/release/detection/finetuning/v3/proto/solver_box.rgb 2>&1 \
 %   | tee ../eccv14-cachedir/release/detection/finetuning/v3/log_box.rgb
 %  
 %   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/extract_features \
 %   ../eccv14-cachedir/release/detection/finetuning/v3/snapshot/rgb_iter_30000.caffemodel \
 %   ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_region.rgb \
 %   hdf5 fc6 \
-%   ../eccv14-cachedir/release/detection/finetuning/v3/features/fc6_30000_region.rgb \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/features/fc6_30000_region_trainval.rgb.h5 \
 %   13000 GPU 0 \
-%   | tee ../eccv14-cachedir/release/detection/finetuning/v3/fe_log_region.rgb
+%   | tee ../eccv14-cachedir/release/detection/finetuning/v3/fe_log_region_trainval.rgb
+%
+%   GLOG_logtostderr=1 ../../caffe/build_region_vader/tools/extract_features \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/snapshot/hha_iter_30000.caffemodel \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/proto/finetune_region.hha \
+%   hdf5 fc6 \
+%   ../eccv14-cachedir/release/detection/finetuning/v3/features/fc6_30000_region_trainval.hha.h5 \
+%   13000 GPU 0 \
+%   | tee ../eccv14-cachedir/release/detection/finetuning/v3/fe_log_region_trainval.hha
+
 
 
 
@@ -163,18 +172,72 @@ if strcmp(jobName, 'fe'),
   REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
   SALT = 'release'; MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
-  imsets = {'val', 'train', 'test'};
-  for i = 3,
-    imset = imsets{i};
-    imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
-    imdb.roidb_func = @roidb_from_nyud2_region;
+  imsets = {'trainval', 'test'};
+  box_or_region = {'region', 'box'};
+  type = {'rgb', 'hha'};
+  for i = 2,
+    for j = 1:2,
+      for k = [2, 1],
+        imset = imsets{i};
+        imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+        if(strcmp(box_or_region{j}, 'region'))
+          imdb.roidb_func = @roidb_from_nyud2_region;
+        elseif(strcmp(box_or_region{j}, 'box'))
+          imdb.roidb_func = @roidb_from_nyud2;
+        end
 
-    h5_file = sprintf('cache/release/detection/feat_cache/rgb_region_30000/%s.h5', imset);
-    window_file = sprintf('cache/release/detection/finetuning/v1/wf/ft_rgb_%s.mat', imset);
-    output_dir = 'cache/release/detection/feat_cache/rgb_region_30000/extract_features_fast/';
-    h5_to_mat_fast(h5_file, imdb, window_file, output_dir);
+        % h5_file = sprintf('cache/release/detection/feat_cache/rgb_region_30000/%s.h5', imset);
+        h5_file = sprintf('/data1/sgupta/tmptmp/nyud2/fc6_30000_%s_%s.%s.h5', box_or_region{j}, imset, type{k})
+        window_file = sprintf('cache/release/detection/finetuning/v3/wf/ft_%s_%s_%s.mat', ...
+          box_or_region{j}, type{k}, imset);
+        output_dir = sprintf('cache/release_ft-trainval/detection/feat_cache/%s_%s_30000/nyud2_release/', ...
+          type{k}, box_or_region{j})
+        mkdir_if_missing(output_dir);
+        h5_to_mat_fast(h5_file, imdb, window_file, output_dir);
+      end
+    end
   end 
 end
+
+if strcmp(jobName, 'hha_cache_features')
+  global RUNNAME
+  RUNNAME = 'release_ft-trainval';
+  p = get_paths();
+  c = benchmarkPaths();
+  NYU_ROOT_DIR = c.dataDir;
+  REGIONDIR = fullfile(p.output_dir, 'regions', 'release-gt-inst');
+  SALT = 'matlab';
+  MAX_BOXES = 2000;
+  task = 'task-detection-with-cabinet';
+
+  imset = 'trainval';
+  imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
+  
+  box_or_region = 'box'; imdb.roidb_func = @roidb_from_nyud2; region = false;
+  % box_or_region = 'region'; imdb.roidb_func = @roidb_from_nyud2_region; region = true;
+ 
+    
+  p = get_paths();
+  type = 'hha';
+  image_dir = fullfile(p.(sprintf('ft_%s_dir', type)));
+  image_ext = 'png';
+  snapshot = 30000;
+  net_file = fullfile_ext(p.snapshot_dir, sprintf('%s_%s_iter_%d', box_or_region, type, snapshot), 'caffemodel');
+  feat_cache_dir = p.cnnF_cache_dir;
+  net_def_file = fullfile('nyud2_finetuning', sprintf('imagenet_%s_256_fc6.prototxt', type));
+  mean_file = fullfile_ext(p.(sprintf('mean_file_%s', type)), 'mat');
+  cache_name = sprintf('%s_%d', type, snapshot);
+  args = {};
+  st = 1; sp = 1; e = 0; gpu_id = 0;
+  args{1} = {'start', st, 'step', sp, 'end', e, ...
+    'image_dir', image_dir, 'image_ext', image_ext, ...
+    'feat_cache_dir', feat_cache_dir, ...
+    'net_def_file', net_def_file, 'net_file', net_file, 'mean_file', mean_file, ...
+    'cache_name', cache_name, 'gpu_id', gpu_id};
+  rcnn_cache_features(imdb, region, args{1}{:});
+end
+
+
 
 % Check the extracted data..
 if strcmp(jobName, 'feat_norm_diff')
@@ -199,8 +262,36 @@ if strcmp(jobName, 'feat_norm_diff')
   norm(f1-f2)./norm(f2);
 end
 
-if strcmp(jobName, 'box_train')
-  res = rcnn_all('task-detection', 'hha', 1, 'train', 'val');
+if strcmp(jobName, 'rcnn')
+  res_tr{1} = rcnn_all('task-detection', 'rgb', 0, 0, 'train', 'val'); 
+  res_tr{end+1} = rcnn_all('task-detection', 'hha', 0, 0, 'train', 'val'); 
+  res_tr{end+1} = rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'val'); 
+  res_tr{end+1} = rcnn_all('task-detection', 'rgb_hha', 1, 0, 'train', 'val'); 
+  res_tr{end+1} = rcnn_all('task-detection', 'rgb_hha', 1, 1, 'train', 'val'); 
+  
+  res{1} = rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', 'test');
+  res{end+1} = rcnn_all('task-detection', 'rgb_hha', 1, 0, 'trainval', 'test');
+  res{end+1} = rcnn_all('task-detection', 'rgb_hha', 1, 1, 'trainval', 'test');
+  res{end+1} = rcnn_all('task-detection', 'rgb', 0, 0, 'trainval', 'test');
+  res{end+1} = rcnn_all('task-detection', 'hha', 0, 0, 'trainval', 'test');
+  global RUNNAME; RUNNAME = 'release';
+  svmC = 10.^[-3 -4 -5 -6];
+  for i = 1:length(svmC),
+    res_svm{i} = rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'val', ...
+      sprintf('_svmC%d', log10(svmC(i))), 'svm_C', svmC(i)); 
+  end
+  global RUNNAME; RUNNAME = 'release_ft-trainval';
+  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', '');
+  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
+  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'val', 'matlab', '_matlab');
+  rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
+  rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
+  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', 'test', '_svmC-4', 'svm_C', 1e-4);
+  
+  global RUNNAME; RUNNAME = 'release';
+  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', 'release', '');
+  rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'release', '');
+  rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'release', '');
 end
 
 if strcmp(jobName, 'region_vis')
