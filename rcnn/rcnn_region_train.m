@@ -131,8 +131,8 @@ for hard_epoch = 1:max_hard_epochs,
     [X_pos, keys_pos] = get_positive(imdb, rcnn_model, true); 
     for j = imdb.class_ids,
       X_pos{j} = rcnn_scale_features(X_pos{j}, opts.feat_norm_mean);
-      caches{j}.X_pos = X_pos{i};
-      caches{j}.keys_pos = keys_pos{i};
+      caches{j}.X_pos = X_pos{j};
+      caches{j}.keys_pos = keys_pos{j};
     end
     force_update = true;
   end
