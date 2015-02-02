@@ -210,15 +210,14 @@ if strcmp(jobName, 'hha_cache_features')
   MAX_BOXES = 2000;
   task = 'task-detection-with-cabinet';
 
-  imset = 'trainval';
+  % imset = 'trainval'; type = 'hha'; gpu_id = 0;
   imdb = imdb_from_nyud2(NYU_ROOT_DIR, imset, task, REGIONDIR, SALT, MAX_BOXES);
   
-  box_or_region = 'box'; imdb.roidb_func = @roidb_from_nyud2; region = false;
-  % box_or_region = 'region'; imdb.roidb_func = @roidb_from_nyud2_region; region = true;
+  % box_or_region = 'box'; imdb.roidb_func = @roidb_from_nyud2; region = false;
+  box_or_region = 'region'; imdb.roidb_func = @roidb_from_nyud2_region; region = true;
  
     
   p = get_paths();
-  type = 'hha';
   image_dir = fullfile(p.(sprintf('ft_%s_dir', type)));
   image_ext = 'png';
   snapshot = 30000;
@@ -226,9 +225,9 @@ if strcmp(jobName, 'hha_cache_features')
   feat_cache_dir = p.cnnF_cache_dir;
   net_def_file = fullfile('nyud2_finetuning', sprintf('imagenet_%s_256_fc6.prototxt', type));
   mean_file = fullfile_ext(p.(sprintf('mean_file_%s', type)), 'mat');
-  cache_name = sprintf('%s_%d', type, snapshot);
+  cache_name = sprintf('%s_%s_%d', type, box_or_region, snapshot);
   args = {};
-  st = 1; sp = 1; e = 0; gpu_id = 0;
+  st = 1; sp = 1; e = 0;
   args{1} = {'start', st, 'step', sp, 'end', e, ...
     'image_dir', image_dir, 'image_ext', image_ext, ...
     'feat_cache_dir', feat_cache_dir, ...
@@ -236,6 +235,11 @@ if strcmp(jobName, 'hha_cache_features')
     'cache_name', cache_name, 'gpu_id', gpu_id};
   rcnn_cache_features(imdb, region, args{1}{:});
 end
+
+% jobName = 'hha_cache_features'; type = 'hha'; gpu_id = 0; imset = 'trainval'; script_region_detection; exit; 
+% jobName = 'hha_cache_features'; type = 'hha'; gpu_id = 0; imset = 'test'; script_region_detection; exit;
+% jobName = 'hha_cache_features'; type = 'rgb'; gpu_id = 1; imset = 'trainval'; script_region_detection; exit; 
+% jobName = 'hha_cache_features'; type = 'rgb'; gpu_id = 1; imset = 'test'; script_region_detection; exit;
 
 
 
@@ -283,6 +287,8 @@ if strcmp(jobName, 'rcnn')
   global RUNNAME; RUNNAME = 'release_ft-trainval';
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', '');
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
+  rcnn_all('task-detection', 'rgb_hha', 1, 0, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
+  rcnn_all('task-detection', 'rgb_hha', 1, 1, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'val', 'matlab', '_matlab');
   rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
   rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
