@@ -298,6 +298,11 @@ if strcmp(jobName, 'rcnn')
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', 'release', '');
   rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'release', '');
   rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'release', '');
+
+
+  global RUNNAME; RUNNAME = 'release_ft-trainval';
+  rcnn_all('task-detection', 'rgb_hha', 1, 1, 'train', 'val', 'matlab', '_matlab_region_training', 1);
+  rcnn_all('task-detection', 'rgb_hha', 1, 1, 'trainval', 'test', 'matlab', '_matlab_region_training', 1);
 end
 
 if strcmp(jobName, 'region_vis')

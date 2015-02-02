@@ -1,4 +1,5 @@
-function res = rcnn_all(task, model_typ, region_features, region_task, trainset, testset, imdb_salt, salt, varargin)
+function res = rcnn_all(task, model_typ, region_features, region_task, trainset, testset, imdb_salt, salt, region_training, varargin)
+% function res = rcnn_all(task, model_typ, region_features, region_task, trainset, testset, imdb_salt, salt, region_training, varargin)
   % global RUNNAME
   % RUNNAME = 'release';
   % p = get_paths(RUNNAME);
@@ -62,7 +63,12 @@ function res = rcnn_all(task, model_typ, region_features, region_task, trainset,
 
   RCNN_CONFIG_OVERRIDE = @() conf_override;
   rcnn_train_opts = {'feat_opts', feat_opts};
-  rcnn_models = rcnn_train(imdb, rcnn_train_opts{:}, varargin{:});
+  if region_task && region_training,
+    rcnn_models = rcnn_region_train(imdb, rcnn_train_opts{:}, varargin{:});
+  else
+    rcnn_models = rcnn_train(imdb, rcnn_train_opts{:}, varargin{:});
+  end
+
   
   if(isstr(testset)), testset = {testset}; end
   for i = 1:length(testset),
