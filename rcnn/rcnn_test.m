@@ -56,7 +56,7 @@ catch
   end
 
   parfor i = 1:length(imdb.image_ids),
-    tic_toc_print('%s: test (%s) %d/%d\n', procid(), imdb.name, i, length(image_ids));
+    tic_toc_print_interval(120, '%s: test (%s) %d/%d\n', procid(), imdb.name, i, length(image_ids));
     d = get_features(imdb, i, feat_opts, false);
     d.feat = rcnn_scale_features(d.feat, training_opts.feat_norm_mean);
     zsAll{i} = bsxfun(@plus, d.feat*rcnn_model.detectors(fold_for_image(i)).W, rcnn_model.detectors(fold_for_image(i)).B);
