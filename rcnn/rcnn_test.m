@@ -103,6 +103,6 @@ save(fullfile_ext(conf.cache_dir, pr_curves_dir_name, ['results_' imdb.name suff
 fprintf('\n~~~~~~~~~~~~~~~~~~~~\n');
 fprintf('Results:\n');
 aps = [res(:).ap]';
-disp(aps);
-disp(mean(aps));
+disp(100*aps);
+disp(100*mean(aps));
 fprintf('~~~~~~~~~~~~~~~~~~~~\n');
