@@ -293,16 +293,30 @@ if strcmp(jobName, 'rcnn')
   rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
   rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', 'test', '_svmC-4', 'svm_C', 1e-4);
+  rcnn_all('task-detection', 'hha', 1, 1, 'trainval', 'test', 'matlab', '_matlab', 0);
   
   global RUNNAME; RUNNAME = 'release';
+  rcnn_all('task-detection', 'rgb_hha', 1, 1, 'train', 'test', 'release', '_release', 0);
+  rcnn_all('task-detection', 'rgb_hha', 1, 0, 'train', 'test', 'release', '_release', 0);
+  rcnn_all('task-detection', 'hha', 1, 1, 'train', 'val', 'release', '_release', 0);
+  rcnn_all('task-detection', 'hha', 1, 1, 'val', 'train', 'release', '_release', 0);
+
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', 'release', '');
   rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'release', '');
   rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'release', '');
+  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'test', 'release', '', 0);
 
 
   global RUNNAME; RUNNAME = 'release_ft-trainval';
+  rcnn_all('task-detection', 'hha', 1, 1, 'trainval', 'test', 'matlab', '_matlab', 0);
+  rcnn_all('task-detection', 'rgb', 1, 1, 'trainval', 'test', 'matlab', '_matlab', 0);
+  rcnn_all('task-detection', 'hha', 1, 1, 'train', 'val', 'matlab', '_matlab', 0);
+  rcnn_all('task-detection', 'hha', 1, 1, 'val', 'train', 'matlab', '_matlab', 0);
+  rcnn_all('task-detection', 'rgb', 0, 0, 'trainval', 'test', 'matlab', '_matlab', 0);
+
   rcnn_all('task-detection', 'rgb_hha', 1, 1, 'train', 'val', 'matlab', '_matlab_region_training', 1);
   rcnn_all('task-detection', 'rgb_hha', 1, 1, 'trainval', 'test', 'matlab', '_matlab_region_training', 1);
+  rcnn_all('task-detection', 'rgb_hha', 1, 1, 'trainval', 'test', 'matlab', '_matlab_region_training_neg_thresh_0.3', 1, 'neg_ov_thresh', 0.3);
 end
 
 if strcmp(jobName, 'region_vis')
