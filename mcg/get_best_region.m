@@ -7,7 +7,7 @@ function [IIgt, II] = get_best_region(imName, oid)
 %  imwrite(IIgt, fullfile_ext(outDir, sprintf('%s_%02d_gt', imName, i), 'png'));
 %  imwrite(II, fullfile_ext(outDir, sprintf('%s_%02d_pr', imName, i), 'png'));
 % end
-  REGIONDIR = '/work4/sgupta/regions-nyu/datasets/nyud40Obj/mcg_sfdnV03_3_3_depthV2_030/';
+  REGIONDIR = '~/psi/work4/sgupta/regions-nyu/datasets/nyud40Obj/mcg_sfdnV03_3_3_depthV2_030/';
   gt = getGroundTruth(imName, 'instance');
   I = getImage(imName, 'images');
   mask = gt == oid;
