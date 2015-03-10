@@ -9,11 +9,12 @@ function [E,O,inds,segs] = edgesDetect( I, model, ng )
 % non-maximum suppression. See edgesTrain for parameter details.
 %
 % USAGE
-%  [E,O,inds,segs] = edgesDetect( I, model )
+%  [E,O,inds,segs] = edgesDetect( I, model, ng )
 %
 % INPUTS
 %  I          - [h x w x 3] color input image
 %  model      - structured edge model trained with edgesTrain
+%  ng         - [h x w x k] additional gradient channels
 %
 % OUTPUTS
 %  E          - [h x w] edge probability map

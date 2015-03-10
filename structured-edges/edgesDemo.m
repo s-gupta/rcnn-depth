@@ -1,5 +1,9 @@
 % Demo for Structured Edge Detector (please see readme.txt first).
 
+error(['This is a demo for Stuctured Edges and not for our RGB-D edge detector.', ...
+  ' Please look at run_all.m for how to run our RGB-D edge detector and look at scripts/script_edges.m' ...
+  ' for how to train the RGB-D edge detector.']);
+
 %% set opts for training (see edgesTrain.m)
 opts=edgesTrain();                % default options (good settings)
 opts.modelDir='models/';          % model will be in models/forest
