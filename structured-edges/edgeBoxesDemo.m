@@ -1,5 +1,7 @@
 % Demo for Edge Boxes (please see readme.txt first).
 
+error(['This is a demo for EdgeBoxes. We do not use EdgeBoxes in this work and use bounding box proposals from MCG instead. Testing code for that can be found in run_all.m and training code in scripts/scripts_regions.m . You can still use our RGB-D contours with EdgeBoxes, but will have to modify structured-edges/edgeBoxes.m appropriately.']); 
+
 %% load pre-trained edge detection model and set opts (see edgesDemo.m)
 model=load('models/forest/modelBsds'); model=model.model;
 model.opts.multiscale=0; model.opts.sharpen=2; model.opts.nThreads=4;
