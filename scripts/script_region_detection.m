@@ -285,14 +285,7 @@ if strcmp(jobName, 'rcnn')
       sprintf('_svmC%d', log10(svmC(i))), 'svm_C', svmC(i)); 
   end
   global RUNNAME; RUNNAME = 'release_ft-trainval';
-  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', '');
-  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
-  rcnn_all('task-detection', 'rgb_hha', 1, 0, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
-  rcnn_all('task-detection', 'rgb_hha', 1, 1, 'trainval', {'test2', 'test'}, 'matlab', '_matlab');
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'val', 'matlab', '_matlab');
-  rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
-  rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'matlab', '_matlab');
-  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'trainval', 'test', '_svmC-4', 'svm_C', 1e-4);
   rcnn_all('task-detection', 'hha', 1, 1, 'trainval', 'test', 'matlab', '_matlab', 0);
   
   global RUNNAME; RUNNAME = 'release';
@@ -300,10 +293,6 @@ if strcmp(jobName, 'rcnn')
   rcnn_all('task-detection', 'rgb_hha', 1, 0, 'train', 'test', 'release', '_release', 0);
   rcnn_all('task-detection', 'hha', 1, 1, 'train', 'val', 'release', '_release', 0);
   rcnn_all('task-detection', 'hha', 1, 1, 'val', 'train', 'release', '_release', 0);
-
-  rcnn_all('task-detection', 'rgb_hha', 0, 0, 'test1', 'test2', 'release', '');
-  rcnn_all('task-detection', 'hha', 0, 0, 'test1', 'test2', 'release', '');
-  rcnn_all('task-detection', 'rgb', 0, 0, 'test1', 'test2', 'release', '');
   rcnn_all('task-detection', 'rgb_hha', 0, 0, 'train', 'test', 'release', '', 0);
 
 
