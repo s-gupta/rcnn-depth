@@ -1,3 +1,4 @@
+extern "C"{
 #include "blas.h"
 
 int dscal_(int *n, double *sa, double *sx, int *incx)
@@ -42,3 +43,4 @@ int dscal_(int *n, double *sa, double *sx, int *incx)
 
   return 0;
 } /* dscal_ */
+}
