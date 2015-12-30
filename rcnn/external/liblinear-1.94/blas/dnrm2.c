@@ -1,3 +1,4 @@
+extern "C"{
 #include <math.h>  /* Needed for fabs() and sqrt() */
 #include "blas.h"
 
@@ -60,3 +61,4 @@ double dnrm2_(int *n, double *x, int *incx)
   return norm;
 
 } /* dnrm2_ */
+}
