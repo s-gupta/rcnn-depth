@@ -1,3 +1,6 @@
+#### _For more recent work that is more accurrate, please refer to our latest paper on [Cross Modal Distillation for Supervision Transfer](http://arxiv.org/pdf/1507.00448.pdf). Code and pre-trained models are available:  [detection](https://github.com/s-gupta/fast-rcnn/tree/distillation), [instance segmentation](https://github.com/s-gupta/fast-rcnn/tree/sds-distillation)._
+
+
 ###Learning Rich Features from RGB-D Images for Object Detection and Segmentation ([pdf](http://www.cs.berkeley.edu/~sgupta/pdf/rcnn-depth.pdf))###
 *Saurabh Gupta, Ross Girshick, Pablo Arbeláez and Jitendra Malik*
 
