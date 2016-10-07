@@ -42,7 +42,7 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
   cd ../../
     ```
   
-0. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks), and external model data (Caffe trained Imagenet model, structured forests BSDS model).
+0. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks), and external model data (Caffe trained Imagenet model, structured forests BSDS model). (Note: Some of these download links don't work with some versions of Google Chrome, please use wget or Firefox or Safari to download them.)
 
   ```shell
   wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-data.tgz
