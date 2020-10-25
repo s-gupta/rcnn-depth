@@ -1,7 +1,7 @@
 #### _For more recent work that is faster and more accurate, please refer to our latest paper on [Cross Modal Distillation for Supervision Transfer](http://arxiv.org/pdf/1507.00448.pdf). Code and pre-trained models are available:  [detection](https://github.com/s-gupta/fast-rcnn/tree/distillation), [instance segmentation](https://github.com/s-gupta/fast-rcnn/tree/sds-distillation)._
 
 
-###Learning Rich Features from RGB-D Images for Object Detection and Segmentation ([pdf](http://www.cs.berkeley.edu/~sgupta/pdf/rcnn-depth.pdf))###
+### Learning Rich Features from RGB-D Images for Object Detection and Segmentation ([pdf](http://www.cs.berkeley.edu/~sgupta/pdf/rcnn-depth.pdf))
 *Saurabh Gupta, Ross Girshick, Pablo Arbeláez and Jitendra Malik*
 
 Presented at European Conference on Computer Vision (ECCV), 2014 
@@ -23,43 +23,35 @@ If you find this code useful in your research, please consider citing:
 This code (RCNN-Depth) is released under the Simplified BSD License (refer to the LICENSE file for details). License files for individual packages are included within individual folders.
 
 #### Installation Instructions ####
-0. Create directory, checkout eccv14-code, utils, rgbdutils, nyu-hooks
-
-  ```shell
+1. Create directory, checkout eccv14-code, utils, rgbdutils, nyu-hooks
+  ```
   mkdir rcnn-depth && cd rcnn-depth
   git clone https://github.com/s-gupta/rcnn-depth.git eccv14-code
   git clone https://github.com/s-gupta/rgbdutils.git eccv14-code/rgbdutils
   git clone https://github.com/s-gupta/utils.git eccv14-code/utils
   git clone https://github.com/s-gupta/nyu-hooks.git eccv14-code/nyu-hooks
   ```
-
-0. Checkout caffe-code 
-
-  ```shell
+2. Checkout caffe-code 
+  ```
   git clone https://github.com/BVLC/caffe.git eccv14-code/caffe
   cd eccv14-code/caffe
   git checkout e5cc609138a0bc4ce5177a67cf84952756d11b38
   cd ../../
-    ```
-  
-0. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks), and external model data (Caffe trained Imagenet model, structured forests BSDS model). (Note: Some of these download links don't work with some versions of Google Chrome, please use wget or Firefox or Safari to download them.)
+  ```
+3. Get the data (color image, depth images, rawdepth images, splits, ground truth, tasks), and external model data (Caffe trained Imagenet model, structured forests BSDS model). (Note: Some of these download links don't work with some versions of Google Chrome, please use wget or Firefox or Safari to download them.)
 
-  ```shell
-  wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-data.tgz
+  ```
+  wget https://www.dropbox.com/s/upuvhbjh4nbji02/eccv14-data.tgz?dl=0
   tar -xf eccv14-data.tgz
-  wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-external-data.tgz
+  wget https://www.dropbox.com/s/xpcqyobv1ljl21y/eccv14-external-data.tgz?dl=0
   tar -xf eccv14-external-data.tgz
   ```
-
-0. Get precomputed models.
- 
+4. Get precomputed models.
   ```shell
-  wget http://www.cs.berkeley.edu/~sgupta/eccv14/eccv14-models.tgz
+  wget https://www.dropbox.com/s/3all0gsuw3ybvm6/eccv14-models.tgz?dl=0
   tar -xf eccv14-models.tgz 
   ```
-
-0. [Optional] Get precomputed results
-
+5. [Optional] Get precomputed results
   ```shell
   wget ftp://ftp.cs.berkeley.edu/pub/projects/vision/rcnn-depth-eccv14/eccv14-cachedir.tgz
   tar -xf eccv14-cachedir.tgz # Also contains the models
@@ -67,24 +59,20 @@ This code (RCNN-Depth) is released under the Simplified BSD License (refer to th
   ```
 
 #### Building ####
-0. Build caffe (Adjust paths for CUDA / MATLAB in Makefile.config.example and copy to Makefile.config)
-
+1. Build caffe (Adjust paths for CUDA / MATLAB in Makefile.config.example and copy to Makefile.config)
   ```shell
   cd eccv14-code/caffe
   make -j 16
   make -j 16 matcaffe
   cd ../..
   ```
-  
-0. Build imagestack (Adjust paths in eccv14-code/rgbdutils/imagestack/Makefile).
+2. Build imagestack (Adjust paths in eccv14-code/rgbdutils/imagestack/Makefile).
   ```shell
   cd eccv14-code/rgbdutils/imagestack/
   make all -j 16
   cd ../../../
   ```
-  
-0. Build toolboxes, MCG, RCNN. Start MATLAB in the folder eccv14-code
-
+3. Build toolboxes, MCG, RCNN. Start MATLAB in the folder eccv14-code
   ```matlab
   mcg_build();
   rcnn_build();
