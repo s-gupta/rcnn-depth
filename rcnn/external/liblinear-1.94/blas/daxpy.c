@@ -1,3 +1,4 @@
+extern "C"{
 #include "blas.h"
 
 int daxpy_(int *n, double *sa, double *sx, int *incx, double *sy,
@@ -47,3 +48,4 @@ int daxpy_(int *n, double *sa, double *sx, int *incx, double *sy,
 
   return 0;
 } /* daxpy_ */
+}

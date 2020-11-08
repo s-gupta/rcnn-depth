@@ -1,3 +1,4 @@
+extern "C"{
 #include "blas.h"
 
 double ddot_(int *n, double *sx, int *incx, double *sy, int *incy)
@@ -48,3 +49,4 @@ double ddot_(int *n, double *sx, int *incx, double *sy, int *incy)
 
   return stemp;
 } /* ddot_ */
+}
